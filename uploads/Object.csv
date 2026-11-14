@@ -1,0 +1,11 @@
+id,class,name,type,Cypher
+O01,Object,전단지,정보 전달 매체,"MERGE (o1:Object {id: 'O01'}) SET o1.name = '전단지', o1.type = '정보 전달 매체'"
+O02,Object,토벌봉,무기,"MERGE (o2:Object {id: 'O02'}) SET o2.name = '토벌봉', o2.type = '무기'"
+O03,Object,검,무기,"MERGE (o3:Object {id: 'O03'}) SET o3.name = '검', o3.type = '무기'"
+O04,Object,인어 비늘,신체 유래 물질,"MERGE (o4:Object {id: 'O04'}) SET o4.name = '인어 비늘', o4.type = '신체 유래 물질'"
+O05,Object,사탕,음식,"MERGE (o5:Object {id: 'O05'}) SET o5.name = '사탕', o5.type = '음식'"
+O06,Object,건전지,전력 공급 도구,"MERGE (o6:Object {id: 'O06'}) SET o6.name = '건전지', o6.type = '전력 공급 도구'"
+O07,Object,인어 조림,음식,"MERGE (o7:Object {id: 'O07'}) SET o7.name = '인어 조림', o7.type = '음식'"
+O08,Object,매운 카레,음식,"MERGE (o8:Object {id: 'O08'}) SET o8.name = '매운 카레', o8.type = '음식'"
+O09,Object,캐롤라이나 리퍼 가루,음식,"MERGE (o9:Object {id: 'O09'}) SET o9.name = '캐롤라이나 리퍼 가루', o9.type = '음식'"
+O10,Object,전설의 동물 도감,서적 및 정보자료,"MERGE (o10:Object {id: 'O10'}) SET o10.name = '전설의 동물 도감', o10.type = '서적 및 정보자료'"

@@ -1,0 +1,9 @@
+id,class,name,type,Cypher
+CE01,CulturalElement,축제,지역 축제,"MERGE (ce1:CulturalElement {id: 'CE01'}) SET ce1.name = '축제', ce1.type = '지역 축제'"
+CE02,CulturalElement,인어설화,설화,"MERGE (ce2:CulturalElement {id: 'CE02'}) SET ce2.name = '인어설화', ce2.type = '설화'"
+CE03,CulturalElement,바다신앙,신앙 ,"MERGE (ce3:CulturalElement {id: 'CE03'}) SET ce3.name = '바다신앙', ce3.type = '신앙 '"
+CE04,CulturalElement,생선조림,음식 문화,"MERGE (ce4:CulturalElement {id: 'CE04'}) SET ce4.name = '생선조림', ce4.type = '음식 문화'"
+CE05,CulturalElement,단팥과자,음식 문화,"MERGE (ce5:CulturalElement {id: 'CE05'}) SET ce5.name = '단팥과자', ce5.type = '음식 문화'"
+CE06,CulturalElement,탄산,음식 문화,"MERGE (ce6:CulturalElement {id: 'CE06'}) SET ce6.name = '탄산', ce6.type = '음식 문화'"
+CE07,CulturalElement,오사카사투리,지역 방언,"MERGE (ce7:CulturalElement {id: 'CE07'}) SET ce7.name = '오사카사투리', ce7.type = '지역 방언'"
+CE08,CulturalElement,공동체음악,음악 문화,"MERGE (ce8:CulturalElement {id: 'CE08'}) SET ce8.name = '공동체음악', ce8.type = '음악 문화'"

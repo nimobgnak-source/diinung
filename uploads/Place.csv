@@ -1,0 +1,10 @@
+id,class,name,type,Cypher
+P01,Place,치이카와의 집,거주 공간,"MERGE (p1:Place {id: 'P01'}) SET p1.name = '치이카와의 집', p1.type = '거주 공간'"
+P02,Place,히토하와 후타바의 집,거주 공간,"MERGE (p2:Place {id: 'P02'}) SET p2.name = '히토하와 후타바의 집', p2.type = '거주 공간'"
+P03,Place,선착장,마을 및 거주지,"MERGE (p3:Place {id: 'P03'}) SET p3.name = '선착장', p3.type = '마을 및 거주지'"
+P04,Place,세이렌의 거처,감금 시설,"MERGE (p4:Place {id: 'P04'}) SET p4.name = '세이렌의 거처', p4.type = '감금 시설'"
+P05,Place,인어섬 마을,마을 및 거주지,"MERGE (p5:Place {id: 'P05'}) SET p5.name = '인어섬 마을', p5.type = '마을 및 거주지'"
+P06,Place,시마지로의 가게,상업 시설,"MERGE (p6:Place {id: 'P06'}) SET p6.name = '시마지로의 가게', p6.type = '상업 시설'"
+P07,Place,숲,자연 공간,"MERGE (p7:Place {id: 'P07'}) SET p7.name = '숲', p7.type = '자연 공간'"
+P08,Place,해변,자연 공간,"MERGE (p8:Place {id: 'P08'}) SET p8.name = '해변', p8.type = '자연 공간'"
+P09,Place,동굴,자연 공간,"MERGE (p9:Place {id: 'P09'}) SET p9.name = '동굴', p9.type = '자연 공간'"
