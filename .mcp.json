@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "neo4j": {
+      "command": "powershell",
+      "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "scripts/neo4j-mcp.ps1"]
+    }
+  }
+}

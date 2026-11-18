@@ -34,6 +34,9 @@ yarn-error.log*
 .env*
 !.env.example
 
+# Neo4j Aura credential downloads (contain passwords)
+Neo4j-*.txt
+
 # vercel
 .vercel
 

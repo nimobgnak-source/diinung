@@ -338,7 +338,91 @@ export const CHIIKAWA_GRAPH_SCHEMA_PROMPT = `
    - (:Event)-[:REFLECTS]->(:CulturalElement) 및 (:Character)-[:REFLECTS]->(:CulturalElement)
    - (:Object)-[:ASSOCIATED_WITH]->(:CulturalElement)
 
-## 4. 대표 질문별 표준 Cypher 쿼리 예시 (Few-Shot)
+## 4. 데이터 유의사항 (CSV 원본 대조 결과)
+- 히토하/후타바 -[:EATS]-> '인어 조림' 관계는 적재 시 이름 불일치('인어조림')로 **존재하지 않음**. 인어 조림 섭취 여부는 \`(c)-[:PARTICIPATES_IN]->(:Event {name: '인어조림섭취'})\`로 조회할 것.
+- OCCURS_AT(발생 장소)가 없는 사건: '토벌의뢰', '세이렌위협', '영생획득', '인어조림섭취' → 장소 조회 시 반드시 OPTIONAL MATCH 사용.
+- '인어살해'는 장소가 '세이렌의 거처'이며, '인어조림섭취' → '영생획득' 및 '세이렌위협'의 원인(CAUSES)이 됨.
+- 일부 Event의 type 속성은 원본 데이터에서 한 칸씩 밀려 입력되어 있음('인어살해', '영생획득', '인어섬송별회' 등). 사건의 성격은 type보다 name과 관계로 판단할 것.
+- 별도의 Ability 노드는 없음 (Character.skills / Character.immortality 속성 사용).
+
+## 5. 대표 질문별 표준 Cypher 쿼리 예시 (Few-Shot, 기획서 검증 쿼리 포함)
+- 질문: "치이카와의 친구는 누구야?"
+MATCH (c:Character {name: '치이카와'})-[:FRIENDS_OF]-(friend:Character)
+RETURN DISTINCT friend.name AS 친구, friend.name_kor AS 별칭
+
+- 질문: "가장 많은 사건에 참여한 캐릭터는 누구야?"
+MATCH (c:Character)-[:PARTICIPATES_IN]->(e:Event)
+RETURN c.name AS 캐릭터, count(DISTINCT e) AS 참여사건수, collect(DISTINCT e.name) AS 참여사건
+ORDER BY 참여사건수 DESC, 캐릭터
+
+- 질문: "'인어살해' 사건을 밝혀내는 단서는 뭐야?"
+MATCH (clue:Object)-[:REVEALS]->(e:Event {name: '인어살해'})
+RETURN clue.name AS 단서, clue.type AS 단서유형
+
+- 질문: "세이렌에게 납치된 인물 중 치이카와가 구출한 인물은?"
+MATCH (:Character {name: '세이렌'})-[:KIDNAPS]->(c:Character)
+MATCH (:Character {name: '치이카와'})-[:RESCUES]->(c)
+RETURN DISTINCT c.name AS 인물
+
+- 질문: "가장 많은 인물이 참여한 사건은?"
+MATCH (c:Character)-[:PARTICIPATES_IN]->(e:Event)
+WITH e, count(DISTINCT c) AS 참여자수, collect(DISTINCT c.name) AS 참여자
+ORDER BY 참여자수 DESC
+WITH collect({사건: e.name, 참여자수: 참여자수, 참여자: 참여자}) AS rows
+WITH rows, rows[0].참여자수 AS maxCount
+UNWIND rows AS row
+WITH row, maxCount WHERE row.참여자수 = maxCount
+RETURN row.사건 AS 사건, row.참여자수 AS 참여자수, row.참여자 AS 참여자
+
+- 질문: "인어 설화와 연결된 인물·사건·사물은?"
+MATCH (n)-[r:REFLECTS|ASSOCIATED_WITH]->(:CulturalElement {name: '인어설화'})
+RETURN DISTINCT CASE WHEN n:Character THEN '인물' WHEN n:Event THEN '사건' ELSE '사물' END AS 구분,
+       n.name AS 이름, type(r) AS 관계
+ORDER BY 구분, 이름
+
+- 질문: "치이카와가 참여한 사건은 각각 어디에서 일어났어?"
+MATCH (:Character {name: '치이카와'})-[:PARTICIPATES_IN]->(e:Event)
+OPTIONAL MATCH (e)-[:OCCURS_AT]->(p:Place)
+RETURN e.name AS 사건, collect(DISTINCT p.name) AS 발생장소
+ORDER BY 사건
+
+- 질문: "'인어살해'에서 '영생획득'까지 어떤 사건들이 인과로 연결돼?" (다단계 인과는 가변 길이 경로 사용)
+MATCH p = (:Event {name: '인어살해'})-[:CAUSES*1..10]->(:Event {name: '영생획득'})
+RETURN [n IN nodes(p) | n.name] AS 사건흐름, length(p) AS 연결단계수
+ORDER BY 연결단계수
+
+- 질문: "'인어살해'는 어떤 후속 사건들에 영향을 주었어?"
+MATCH p = (:Event {name: '인어살해'})-[:CAUSES*1..5]->(next:Event)
+RETURN [n IN nodes(p) | n.name] AS 사건흐름, next.name AS 후속사건, length(p) AS 단계
+ORDER BY 단계
+
+- 질문: "치이카와와 히토하는 어떤 연결고리로 이어져 있어?" (두 개체 간 연결은 shortestPath)
+MATCH p = shortestPath((:Character {name: '치이카와'})-[*1..8]-(:Character {name: '히토하'}))
+RETURN [n IN nodes(p) | n.name] AS 연결경로, [r IN relationships(p) | type(r)] AS 관계유형, length(p) AS 연결단계수
+
+- 질문: "치이카와가 참여한 사건을 통해 어떤 문화 요소와 연결돼?"
+MATCH (:Character {name: '치이카와'})-[:PARTICIPATES_IN]->(e:Event)-[:REFLECTS]->(ce:CulturalElement)
+RETURN e.name AS 사건, ce.name AS 문화요소, ce.type AS 문화유형
+
+- 질문: "다른 등장인물과 직접 연결이 많은 인물은?"
+MATCH (c:Character)
+OPTIONAL MATCH (c)-[]-(other:Character) WHERE other <> c
+RETURN c.name AS 캐릭터, count(DISTINCT other) AS 연결인물수
+ORDER BY 연결인물수 DESC, 캐릭터
+
+- 질문: "전단지는 어떤 사건을 일으키고, 그 사건은 어떤 만남으로 이어져?"
+MATCH p = (:Object {name: '전단지'})-[:CAUSES]->(:Event {name: '인어섬방문'})-[:CAUSES]->(:Event {name: '세이렌조우'})
+RETURN [n IN nodes(p) | n.name] AS 사건흐름
+
+- 질문: "세이렌의 위협을 직접 일으킨 선행 사건은?"
+MATCH (cause:Event)-[:CAUSES]->(:Event {name: '세이렌위협'})
+RETURN cause.name AS 선행사건
+
+- 질문: "동료 구출 이후 어떤 사건들을 거쳐 귀환에 이르러?"
+MATCH p = (:Event {name: '동료구출'})-[:CAUSES*1..10]->(:Event {name: '귀환'})
+RETURN [n IN nodes(p) | n.name] AS 사건흐름, length(p) AS 연결단계수
+ORDER BY 연결단계수
+
 - 질문: "세이렌에게 납치된 캐릭터를 구출하기 위해 누가 참여했어?"
 MATCH (s:Character {name: '세이렌'})-[:KIDNAPS]->(victim:Character)
 OPTIONAL MATCH (rescuer:Character)-[:RESCUES]->(victim)
