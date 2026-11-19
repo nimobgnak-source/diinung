@@ -11,7 +11,7 @@ import {
 // 배포(Vercel) 설정: neo4j-driver는 Node.js 런타임 필요, LLM 2~3회 호출로 응답이 30~60초 걸리므로 시간 제한 확대
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-export const maxDuration = 120;
+export const maxDuration = 300;
 
 const NODE_LABELS: NodeCategory[] = ["지역", "대학", "축제", "아티스트", "장르"];
 
@@ -312,50 +312,7 @@ async function fetchSubgraph(ids: string[]): Promise<{
 // ---------------------------------------------------------------------------
 // GET: 연결 상태 및 라벨별 노드 수
 // ---------------------------------------------------------------------------
-export async function GET(req: NextRequest) {
-  // TEMP 진단: 배포 환경에서 LLM 응답 시간 측정 (?diag=1)
-  const diag = req.nextUrl.searchParams.get("diag");
-  if (diag) {
-    const t = Date.now();
-    const hardLimit = new Promise<never>((_, reject) =>
-      setTimeout(() => reject(new Error("diag hard timeout 100s")), 100_000)
-    );
-    const work = async (): Promise<string> => {
-      if (diag === "catalog") {
-        const c = await getGraphCatalog();
-        return `dict ${c.entityDictionary.length} chars, ${c.nameIndex.size} terms`;
-      }
-      if (diag === "bigexaone") {
-        const c = await getGraphCatalog();
-        const t0 = Date.now();
-        const { generateWithExaone } = await import("@/lib/exaone");
-        const prompt = `아래 스키마로 읽기 전용 Cypher 1개만 출력하세요.\n${FESTA_GRAPH_SCHEMA_PROMPT}\n[개체 사전]\n${c.entityDictionary}\n[질문]\n잔나비가 출연한 축제는 어느 대학 축제야?`;
-        const out = await generateWithExaone(prompt, { reasoningEffort: "low", timeoutMs: 90_000 });
-        return `prompt ${prompt.length} chars, exaone ${Date.now() - t0}ms: ${out.replace(/\s+/g, " ").slice(0, 80)}`;
-      }
-      if (diag === "exaone") {
-        const { generateWithExaone } = await import("@/lib/exaone");
-        return generateWithExaone("Reply with just: OK", { reasoningEffort: "low", maxTokens: 512, timeoutMs: 25_000 });
-      }
-      if (diag === "gemini") {
-        const { getGeminiClient } = await import("@/lib/gemini");
-        const r = await getGeminiClient().models.generateContent({ model: "gemini-3.5-flash-lite", contents: "Reply with just: OK" });
-        return r.text ?? "";
-      }
-      if (diag === "net") {
-        const r = await fetch("https://api.exaone.ai/v1/models", { signal: AbortSignal.timeout(15_000) });
-        return `status ${r.status}`;
-      }
-      return "unknown diag";
-    };
-    try {
-      const out = await Promise.race([work(), hardLimit]);
-      return NextResponse.json({ diag, ok: true, ms: Date.now() - t, out: String(out).slice(0, 60) });
-    } catch (e) {
-      return NextResponse.json({ diag, ok: false, ms: Date.now() - t, error: e instanceof Error ? e.message.slice(0, 300) : String(e) });
-    }
-  }
-
+export async function GET() {
   try {
     const counts = await runReadQuery<{ label: string; count: number }>(
       "MATCH (n) RETURN labels(n)[0] AS label, count(n) AS count"
@@ -389,10 +346,20 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "질문 내용을 입력해 주세요." }, { status: 400 });
     }
 
+    // 단계별 소요 시간(ms) — 응답과 서버 로그에 남겨 느린 단계를 바로 찾을 수 있게 함
+    const timings: Record<string, number> = {};
+    let lapStart = Date.now();
+    const lap = (step: string) => {
+      const now = Date.now();
+      timings[step] = now - lapStart;
+      lapStart = now;
+    };
+
     // 1. Neo4j 연결 확인 + 카탈로그(스키마 요약·개체 사전·이름 색인)
     let catalog: GraphCatalog;
     try {
       catalog = await getGraphCatalog();
+      lap("catalog");
     } catch (dbErr) {
       return NextResponse.json(
         {
@@ -441,6 +408,7 @@ ${message}`;
 
     const cypherRes = await generateText(cypherPrompt, cypherOpts);
     llmCalls.push(cypherRes);
+    lap("cypherLlm");
 
     let generatedCypher = cleanCypherString(cypherRes.text || "");
     let records: Record<string, unknown>[] = [];
@@ -496,6 +464,7 @@ ${errMsg}
 
     // 5. 질문·결과에 등장한 노드로 시각화 서브그래프와 근거 경로 추출
     const focusIds = collectFocusIds(records, message, generatedCypher, catalog);
+    lap("query");
     const subgraph = await fetchSubgraph(
       focusIds.length > 0 ? focusIds : ["artist-042", "genre-001"] // 기본: 잔나비-밴드
     );
@@ -526,8 +495,11 @@ ${subgraph.unverifiedPaths.length > 0 ? `\n[검수상태 '확인필요' 관계 �
 ${records.length > 0 ? JSON.stringify(records.slice(0, 40)) : "(0건)"}`;
 
     // 근거 데이터가 이미 주어진 요약 작업이므로 추론 강도 low
+    lap("subgraph");
     const answerRes = await generateText(answerPrompt, { reasoningEffort: "low" });
     llmCalls.push(answerRes);
+    lap("answerLlm");
+    console.log("[chat] timings(ms)", JSON.stringify(timings));
 
     const exaoneErrors = llmCalls.map((c) => c.exaoneError).filter((e): e is string => Boolean(e));
 
@@ -539,6 +511,7 @@ ${records.length > 0 ? JSON.stringify(records.slice(0, 40)) : "(0건)"}`;
 
     return NextResponse.json({
       answer,
+      timings,
       unverifiedPaths: subgraph.unverifiedPaths,
       modelUsed: answerRes.modelUsed,
       provider: answerRes.provider,
