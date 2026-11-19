@@ -314,23 +314,34 @@ async function fetchSubgraph(ids: string[]): Promise<{
 // ---------------------------------------------------------------------------
 export async function GET(req: NextRequest) {
   // TEMP 진단: 배포 환경에서 LLM 응답 시간 측정 (?diag=1)
-  if (req.nextUrl.searchParams.get("diag") === "1") {
-    const timeIt = async (fn: () => Promise<string>) => {
-      const t = Date.now();
-      try {
-        const out = await fn();
-        return { ok: true, ms: Date.now() - t, out: out.slice(0, 40) };
-      } catch (e) {
-        return { ok: false, ms: Date.now() - t, error: e instanceof Error ? e.message.slice(0, 300) : String(e) };
+  const diag = req.nextUrl.searchParams.get("diag");
+  if (diag) {
+    const t = Date.now();
+    const hardLimit = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error("diag hard timeout 30s")), 30_000)
+    );
+    const work = async (): Promise<string> => {
+      if (diag === "exaone") {
+        const { generateWithExaone } = await import("@/lib/exaone");
+        return generateWithExaone("Reply with just: OK", { reasoningEffort: "low", maxTokens: 512, timeoutMs: 25_000 });
       }
+      if (diag === "gemini") {
+        const { getGeminiClient } = await import("@/lib/gemini");
+        const r = await getGeminiClient().models.generateContent({ model: "gemini-3.5-flash-lite", contents: "Reply with just: OK" });
+        return r.text ?? "";
+      }
+      if (diag === "net") {
+        const r = await fetch("https://api.exaone.ai/v1/models", { signal: AbortSignal.timeout(15_000) });
+        return `status ${r.status}`;
+      }
+      return "unknown diag";
     };
-    const { generateWithExaone } = await import("@/lib/exaone");
-    const { generateContentWithFallback } = await import("@/lib/gemini");
-    const [exaone, gemini] = await Promise.all([
-      timeIt(() => generateWithExaone("Reply with just: OK", { reasoningEffort: "low", maxTokens: 512, timeoutMs: 45_000 })),
-      timeIt(async () => (await generateContentWithFallback("Reply with just: OK")).text),
-    ]);
-    return NextResponse.json({ exaone, gemini });
+    try {
+      const out = await Promise.race([work(), hardLimit]);
+      return NextResponse.json({ diag, ok: true, ms: Date.now() - t, out: String(out).slice(0, 60) });
+    } catch (e) {
+      return NextResponse.json({ diag, ok: false, ms: Date.now() - t, error: e instanceof Error ? e.message.slice(0, 300) : String(e) });
+    }
   }
 
   try {
