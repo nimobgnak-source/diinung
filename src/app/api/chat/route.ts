@@ -312,7 +312,27 @@ async function fetchSubgraph(ids: string[]): Promise<{
 // ---------------------------------------------------------------------------
 // GET: 연결 상태 및 라벨별 노드 수
 // ---------------------------------------------------------------------------
-export async function GET() {
+export async function GET(req: NextRequest) {
+  // TEMP 진단: 배포 환경에서 LLM 응답 시간 측정 (?diag=1)
+  if (req.nextUrl.searchParams.get("diag") === "1") {
+    const timeIt = async (fn: () => Promise<string>) => {
+      const t = Date.now();
+      try {
+        const out = await fn();
+        return { ok: true, ms: Date.now() - t, out: out.slice(0, 40) };
+      } catch (e) {
+        return { ok: false, ms: Date.now() - t, error: e instanceof Error ? e.message.slice(0, 300) : String(e) };
+      }
+    };
+    const { generateWithExaone } = await import("@/lib/exaone");
+    const { generateContentWithFallback } = await import("@/lib/gemini");
+    const [exaone, gemini] = await Promise.all([
+      timeIt(() => generateWithExaone("Reply with just: OK", { reasoningEffort: "low", maxTokens: 512, timeoutMs: 45_000 })),
+      timeIt(async () => (await generateContentWithFallback("Reply with just: OK")).text),
+    ]);
+    return NextResponse.json({ exaone, gemini });
+  }
+
   try {
     const counts = await runReadQuery<{ label: string; count: number }>(
       "MATCH (n) RETURN labels(n)[0] AS label, count(n) AS count"
