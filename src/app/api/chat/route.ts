@@ -8,6 +8,11 @@ import {
   NodeCategory,
 } from "@/lib/schema";
 
+// 배포(Vercel) 설정: neo4j-driver는 Node.js 런타임 필요, LLM 2~3회 호출로 응답이 30~60초 걸리므로 시간 제한 확대
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+export const maxDuration = 120;
+
 const NODE_LABELS: NodeCategory[] = ["지역", "대학", "축제", "아티스트", "장르"];
 
 // ---------------------------------------------------------------------------
