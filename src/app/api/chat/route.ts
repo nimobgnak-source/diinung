@@ -318,9 +318,21 @@ export async function GET(req: NextRequest) {
   if (diag) {
     const t = Date.now();
     const hardLimit = new Promise<never>((_, reject) =>
-      setTimeout(() => reject(new Error("diag hard timeout 30s")), 30_000)
+      setTimeout(() => reject(new Error("diag hard timeout 100s")), 100_000)
     );
     const work = async (): Promise<string> => {
+      if (diag === "catalog") {
+        const c = await getGraphCatalog();
+        return `dict ${c.entityDictionary.length} chars, ${c.nameIndex.size} terms`;
+      }
+      if (diag === "bigexaone") {
+        const c = await getGraphCatalog();
+        const t0 = Date.now();
+        const { generateWithExaone } = await import("@/lib/exaone");
+        const prompt = `아래 스키마로 읽기 전용 Cypher 1개만 출력하세요.\n${FESTA_GRAPH_SCHEMA_PROMPT}\n[개체 사전]\n${c.entityDictionary}\n[질문]\n잔나비가 출연한 축제는 어느 대학 축제야?`;
+        const out = await generateWithExaone(prompt, { reasoningEffort: "low", timeoutMs: 90_000 });
+        return `prompt ${prompt.length} chars, exaone ${Date.now() - t0}ms: ${out.replace(/\s+/g, " ").slice(0, 80)}`;
+      }
       if (diag === "exaone") {
         const { generateWithExaone } = await import("@/lib/exaone");
         return generateWithExaone("Reply with just: OK", { reasoningEffort: "low", maxTokens: 512, timeoutMs: 25_000 });
