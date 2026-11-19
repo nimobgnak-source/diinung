@@ -1,33 +1,25 @@
 /**
- * 영화 ‘치이카와: 인어섬의 비밀’ (팀 A+토벌단)
- * 프로젝트 기획서 및 CSV / AuraDB 실측 그래프 스키마 정의
+ * 페스타그래프(FestaGraph) — 2026 전국 주요 대학 축제 및 출연 아티스트 지식그래프
+ * 데이터: edge_all_수정본.xlsx → data/festival/*.csv → Neo4j AuraDB
+ * (적재: scripts/xlsx-to-csv.mjs, scripts/load-graph.mjs)
  */
 
-export type NodeCategory =
-  | "Character"
-  | "Event"
-  | "Place"
-  | "Object"
-  | "Ability"
-  | "CulturalElement";
+export type NodeCategory = "지역" | "대학" | "축제" | "아티스트" | "장르";
 
 export interface GraphNode {
   id: string;
   label: NodeCategory;
   name: string;
+  /** 같은 이름의 캠퍼스 구분 등 화면 표시용 이름 (예: '성균관대학교 (경기)') */
   displayName?: string;
-  name_kor?: string;
-  type?: string;
-  personality?: string;
-  immortality?: boolean;
-  skills?: string;
-  description?: string;
+  /** 노드 상세 바에 표시할 속성 (한국어 키) */
+  props?: Record<string, string>;
 }
 
 export interface GraphEdge {
   id: string;
-  source: string; // node name
-  target: string; // node name
+  source: string; // node id
+  target: string; // node id
   relation: string;
 }
 
@@ -38,410 +30,159 @@ export const NODE_LEGEND: Array<{
   color: string;
   bgLight: string;
 }> = [
-  {
-    label: "Character",
-    display: "Character",
-    upperTag: "CHARACTER",
-    color: "#C83E82",
-    bgLight: "#FCEEF5",
-  },
-  {
-    label: "Event",
-    display: "Event",
-    upperTag: "EVENT",
-    color: "#B86B19",
-    bgLight: "#FDF3E7",
-  },
-  {
-    label: "Place",
-    display: "Place",
-    upperTag: "PLACE",
-    color: "#0D7A68",
-    bgLight: "#E6F4F1",
-  },
-  {
-    label: "Object",
-    display: "Object",
-    upperTag: "OBJECT",
-    color: "#5E43D8",
-    bgLight: "#F0EDFC",
-  },
-  {
-    label: "Ability",
-    display: "Ability",
-    upperTag: "ABILITY",
-    color: "#2563EB",
-    bgLight: "#EBF2FE",
-  },
-  {
-    label: "CulturalElement",
-    display: "Cultural Element",
-    upperTag: "CULTURAL ELEMENT",
-    color: "#7C2D12",
-    bgLight: "#F9EBE7",
-  },
+  { label: "지역", display: "지역", upperTag: "REGION", color: "#0D7A68", bgLight: "#E6F4F1" },
+  { label: "대학", display: "대학", upperTag: "UNIVERSITY", color: "#2563EB", bgLight: "#EBF2FE" },
+  { label: "축제", display: "축제", upperTag: "FESTIVAL", color: "#C83E82", bgLight: "#FCEEF5" },
+  { label: "아티스트", display: "아티스트", upperTag: "ARTIST", color: "#5E43D8", bgLight: "#F0EDFC" },
+  { label: "장르", display: "장르", upperTag: "GENRE", color: "#B86B19", bgLight: "#FDF3E7" },
 ];
 
+/** 기획서 Ⅲ. 핵심 질문 3개 + 대표 탐색 질문 */
 export const HERO_RECOMMENDED_QUESTIONS = [
-  "세이렌에게 납치된 캐릭터를 구출하기 위해 누가 참여했어?",
-  "치이카와가 사용한 사물은 무엇이고 어떤 능력과 연결돼?",
-  "인어섬의 사건들은 어떤 순서로 서로 영향을 주었어?",
-  "일본 전통문화와 연관된 사물이나 사건은 무엇이야?",
+  "수도권과 비수도권 축제에 모두 출연한 아티스트는 누구이고, 어떤 장르야?",
+  "여러 대학 축제에 가장 많이 출연한 아티스트와 그 주 장르는?",
+  "남자 아이돌을 섭외한 축제를 연 대학들은 주로 어느 지역에 있어?",
+  "잔나비가 출연한 축제는 어느 대학 축제야?",
 ];
 
-export const INITIAL_CYPHER_PREVIEW = `MATCH (c:Character)-[:RIVAL_OF|KIDNAPS|ATTACKS]-(s:Character {name:"세이렌"})
-MATCH (c)-[:PARTICIPATES_IN]->(e:Event)-[:OCCURS_AT]->(p:Place)
-RETURN c.name AS 캐릭터, p.name AS 장소`;
+export const INITIAL_CYPHER_PREVIEW = `MATCH (a:아티스트)-[:출연함]->(f:축제)<-[:개최함]-(c:대학)
+WITH a, count(DISTINCT f) AS 출연축제수
+ORDER BY 출연축제수 DESC LIMIT 5
+OPTIONAL MATCH (a)-[:속함 {role: 'main'}]->(g:장르)
+RETURN a.name AS 아티스트, 출연축제수, collect(g.name) AS 주장르`;
 
 export const INITIAL_PREVIEW_GRAPH: {
   title: string;
   nodes: GraphNode[];
   edges: GraphEdge[];
 } = {
-  title: '"세이렌과 랏코 납치 사건" 미리보기',
+  title: '"가장 많은 축제에 출연한 아티스트, 잔나비" 미리보기',
   nodes: [
-    {
-      id: "C10",
-      label: "Character",
-      name: "세이렌",
-      name_kor: "세이렌",
-      type: "검은 만두 머리와 빨간 꼬리",
-      personality: "선악을 구분하기 어려움",
-      immortality: false,
-      skills: "노래를 통한 식물 조종",
-    },
-    {
-      id: "C06",
-      label: "Character",
-      name: "랏코",
-      name_kor: "해달",
-      type: "해달을 닮은 모습",
-      personality: "침착하고 듬직함",
-      immortality: false,
-      skills: "언어 발화",
-    },
-    {
-      id: "E05",
-      label: "Event",
-      name: "랏코납치",
-      displayName: "랏코 납치",
-      type: "납치 및 갈등",
-    },
-    {
-      id: "E06",
-      label: "Event",
-      name: "동료구출",
-      displayName: "동료 구출",
-      type: "구조 및 탈출",
-    },
-    {
-      id: "P04",
-      label: "Place",
-      name: "세이렌의 거처",
-      type: "감금 시설",
-    },
-    {
-      id: "C01",
-      label: "Character",
-      name: "치이카와",
-      name_kor: "먼작귀",
-      type: "동그란 귀와 작고 하얀 몸",
-      personality: "소심하지만 다정하고 용감함",
-      immortality: false,
-      skills: "비밀 유지",
-    },
-    {
-      id: "O02",
-      label: "Object",
-      name: "토벌봉",
-      type: "무기",
-    },
+    { id: "artist-042", label: "아티스트", name: "잔나비", props: { 성별: "남", "출연 축제 수": "8" } },
+    { id: "genre-001", label: "장르", name: "밴드" },
+    { id: "festival-010", label: "축제", name: '봄대동제 MASTERPEACE "SOULMATE"', props: { 시즌: "봄", 기간: "2026-05-27 ~ 2026-05-29" } },
+    { id: "festival-018", label: "축제", name: "부산대학교 대동제 피우리오", props: { 시즌: "봄", 기간: "2026-05-26 ~ 2026-05-28" } },
+    { id: "festival-022", label: "축제", name: "GRACIA 축제", props: { 시즌: "봄", 기간: "2026-05-06 ~ 2026-05-08" } },
+    { id: "college-006", label: "대학", name: "경희대학교", displayName: "경희대학교 (서울)", props: { 소재지: "서울", 권역: "수도권" } },
+    { id: "college-012", label: "대학", name: "부산대학교", props: { 소재지: "부산", 권역: "영남권" } },
+    { id: "college-015", label: "대학", name: "조선대학교", props: { 소재지: "광주", 권역: "호남권" } },
   ],
   edges: [
-    {
-      id: "e1",
-      source: "세이렌",
-      target: "랏코",
-      relation: "KIDNAPS",
-    },
-    {
-      id: "e2",
-      source: "랏코",
-      target: "랏코납치",
-      relation: "PARTICIPATES_IN",
-    },
-    {
-      id: "e3",
-      source: "랏코납치",
-      target: "동료구출",
-      relation: "CAUSES",
-    },
-    {
-      id: "e4",
-      source: "동료구출",
-      target: "세이렌의 거처",
-      relation: "OCCURS_AT",
-    },
-    {
-      id: "e5",
-      source: "치이카와",
-      target: "동료구출",
-      relation: "PARTICIPATES_IN",
-    },
-    {
-      id: "e6",
-      source: "치이카와",
-      target: "토벌봉",
-      relation: "USES",
-    },
+    { id: "p1", source: "artist-042", target: "genre-001", relation: "속함" },
+    { id: "p2", source: "artist-042", target: "festival-010", relation: "출연함" },
+    { id: "p3", source: "artist-042", target: "festival-018", relation: "출연함" },
+    { id: "p4", source: "artist-042", target: "festival-022", relation: "출연함" },
+    { id: "p5", source: "college-006", target: "festival-010", relation: "개최함" },
+    { id: "p6", source: "college-012", target: "festival-018", relation: "개최함" },
+    { id: "p7", source: "college-015", target: "festival-022", relation: "개최함" },
   ],
 };
 
-export const KNOWN_NODE_NAMES = [
-  // Character (15)
-  "치이카와",
-  "하치와레",
-  "우사기",
-  "모몽가",
-  "쿠리만쥬",
-  "랏코",
-  "시사",
-  "카니",
-  "시마지로",
-  "세이렌",
-  "인어들",
-  "섬주민",
-  "히토하",
-  "후타바",
-  "섬 마을 촌장",
-  // Event (13)
-  "전단지수령",
-  "인어섬방문",
-  "세이렌조우",
-  "토벌의뢰",
-  "랏코납치",
-  "동료구출",
-  "세이렌위협",
-  "세이렌토벌",
-  "인어살해",
-  "영생획득",
-  "인어조림섭취",
-  "인어섬송별회",
-  "귀환",
-  // Place (9)
-  "치이카와의 집",
-  "히토하와 후타바의 집",
-  "선착장",
-  "세이렌의 거처",
-  "인어섬 마을",
-  "시마지로의 가게",
-  "숲",
-  "해변",
-  "동굴",
-  // Object (10)
-  "전단지",
-  "토벌봉",
-  "검",
-  "인어 비늘",
-  "사탕",
-  "건전지",
-  "인어 조림",
-  "매운 카레",
-  "캐롤라이나 리퍼 가루",
-  "전설의 동물 도감",
-  // CulturalElement (8)
-  "축제",
-  "인어설화",
-  "바다신앙",
-  "생선조림",
-  "단팥과자",
-  "탄산",
-  "오사카사투리",
-  "공동체음악",
-];
+/**
+ * Text-to-Cypher용 정적 스키마 설명 + Few-Shot.
+ * 실제 개체 목록(대학·축제·아티스트 이름, 별칭)은 route.ts가 DB에서 읽어 [개체 사전]으로 덧붙입니다.
+ */
+export const FESTA_GRAPH_SCHEMA_PROMPT = `
+## 1. 프로젝트 개요
+- 프로젝트명: 2026 전국 주요 대학 축제 및 출연 아티스트 지식그래프 (팀 페스타그래프 FestaGraph)
+- 목적: 대학별 축제 라인업과 섭외 장르를 지역·대학 단위로 비교 및 시각화
+- 기준 시점: 2026년 2월 ~ 12월 / 출처: 각 대학 총학생회 공식 인스타그램, campustival.com
+- 범위 제외: 외부인이 참여할 수 없는 학내 행사(예: 합동응원전, 동아리 연합 축제)
 
-export const CHIIKAWA_GRAPH_SCHEMA_PROMPT = `
-## 1. 프로젝트 개요 및 도메인 배경
-- 프로젝트명: 영화 ‘치이카와: 인어섬의 비밀’ 지식그래프 분석 (팀명: A+토벌단 - 박민진, 방민주, 석예린)
-- 분석 목적: 국경과 문화를 넘어 흥행한 극장판 <치이카와: 인어섬의 비밀>의 요소를 **서사적 측면(사건과 인과관계)**, **문화적 측면(일본 전통·설화·음식·방언·음악)**, **관계적 측면(우호/적대/협력/구출/납치)**으로 구조화하여 분석함.
-- 기준 시점: 전단지 수령 ~ 귀환
+## 2. 노드 라벨과 속성 (라벨·관계 타입은 한글 그대로 사용)
+- (:지역 {id, name, region})  예: name '서울'·'경기'·'부산', region(권역) '수도권'·'영남권'·'호남권'·'충청권'·'강원권'·'제주권'
+- (:대학 {id, name, display_name, type, location, founded_year, student_count})
+  - type: '사립대학교' 또는 '국립대학교'. location: 지역 이름(서울/경기/...)
+  - ⚠️ 같은 대학의 캠퍼스가 별도 노드인 경우가 있음: 성균관대학교(서울·경기), 경희대학교(서울·경기), 홍익대학교(서울·세종). 구분이 필요하면 display_name 또는 location을 쓰고, 대학 수를 셀 때는 count(DISTINCT c.name)을 쓸 것.
+- (:축제 {id, name, venue, start_date, end_date, season})
+  - start_date/end_date: Neo4j date 타입 (예: f.start_date >= date('2026-09-01')). season: '봄' 또는 '가을'
+  - 이름에 따옴표·부제가 포함됨(예: '입실렌티: 지.야의 함성 "주인공"'). 축제 이름은 반드시 CONTAINS로 부분 일치 검색할 것.
+- (:아티스트 {id, name, gender, aliases})
+  - gender: '남' / '여' / '혼성' (일부 아티스트는 null)
+  - name은 '영문 (한글)' 형태가 많음(예: 'LE SSERAFIM (르세라핌)', 'aespa'). aliases는 출연 원본 표기 목록(예: aespa의 aliases = ['에스파']).
+- (:장르 {id, name})  name: '밴드', '아이돌·팝', '싱어송라이터', '힙합', '발라드', '기타' (6개)
 
-## 2. AuraDB 노드 라벨(Labels), 속성(Properties) 및 전체 개체 목록 (총 55개 노드 + 기획서 능력 속성 4종)
-주의: 기획서 초안의 Ability(능력: 영생, 노래를 통한 식물 조종, 소용돌이 생성, 랩)는 실제 AuraDB에서 별도 노드가 아닌 **Character 노드의 skills(보유 기술) 및 immortality(영생 여부, boolean) 속성**으로 통합되어 저장되어 있습니다!
+## 3. 관계 (총 4종)
+- (:대학)-[:위치함]->(:지역)
+- (:대학)-[:개최함]->(:축제)
+- (:아티스트)-[:출연함 {review_status}]->(:축제)
+- (:아티스트)-[:속함 {role, review_status}]->(:장르)  role: 'main'(주 장르) / 'sub'(부 장르) / '미분류'
+- 모든 관계의 review_status(검수상태): '정상' 또는 '확인필요'(공개 자료로 보완했으나 팀 검수 전인 관계)
 
-### (1) Character (등장인물, 총 15개)
-- 속성:
-  - id: 'C01' ~ 'C15'
-  - name: 공식 명칭
-  - name_kor: 한국어 별칭/음역 명칭 (사용자가 한국어 별칭으로 질문해도 name 또는 name_kor로 매칭할 것)
-  - type: 외형적 특징
-  - personality: 성격
-  - immortality: 영생 여부 (boolean: true 또는 false — 히토하, 후타바만 true)
-  - skills: 보유 능력/특기 문자열
-- 전체 Character 노드 목록:
-  - '치이카와' (name_kor: '먼작귀', immortality: false, skills: '비밀 유지', type: '동그란 귀와 작고 하얀 몸', personality: '소심하지만 다정하고 용감함')
-  - '하치와레' (name_kor: '가르마', immortality: false, skills: '언어 발화', type: '파란색과 흰색의 고양이', personality: '다정하고 긍정적임')
-  - '우사기' (name_kor: '토끼', immortality: false, skills: '랩', type: '노란색 몸과 긴 귀', personality: '활발하고 자유분방함')
-  - '모몽가' (name_kor: '하늘다람쥐', immortality: false, skills: '떼쓰기', type: '하늘다람쥐를 닮은 모습', personality: '자기중심적이고 애교많음')
-  - '쿠리만쥬' (name_kor: '밤만쥬', immortality: false, skills: '맛보기 대장', type: '베이지색 몸과 작은 수달 귀', personality: '느긋하고 먹기를 좋아함')
-  - '랏코' (name_kor: '해달', immortality: false, skills: '언어 발화', type: '해달을 닮은 모습', personality: '침착하고 듬직함')
-  - '시사' (name_kor: '시사', immortality: false, skills: '요리 대장', type: '시사(사자상)을 닮은 모습', personality: '성실하고 예의 바름')
-  - '카니' (name_kor: '헌책방', immortality: false, skills: '집게로 절단하기', type: '게 모양 장식을 지닌 분홍색  ', personality: '다정하고 온순함')
-  - '시마지로' (name_kor: '섬 아저씨', immortality: false, skills: '소용돌이 생성', type: '천 하나를 두른 아저씨의 모습', personality: '친절하고 사명감 있음')
-  - '세이렌' (name_kor: '세이렌', immortality: false, skills: '노래를 통한 식물 조종', type: '검은 만두 머리와 빨간 꼬리', personality: '선악을 구분하기 어려움')
-  - '인어들' (name_kor: '인어들', immortality: false, skills: '코러스', type: '하얀 몸과 빨간 꼬리', personality: '무리 지어 다니고 노래를 좋아함')
-  - '섬주민' (name_kor: '섬주민', immortality: false, skills: '없음', type: '모두 회색으로 표시', personality: '없음')
-  - '히토하' (name_kor: '한잎이', immortality: true, skills: '없음', type: '머리에 잎이 한 개 달림', personality: '순하고 호기심이 많음')
-  - '후타바' (name_kor: '두잎이', immortality: true, skills: '없음', type: '머리에 잎이 두 개 달림', personality: '명랑하고 친근함')
-  - '섬 마을 촌장' (name_kor: '섬 마을 촌장', immortality: false, skills: '없음', type: '회색으로 표시', personality: '없음')
+## 4. 용어 → 그래프 매핑 규칙
+- '수도권/비수도권': 지역.region 기준 (비수도권 = region <> '수도권')
+- 'K-POP', '아이돌': 장르 '아이돌·팝'. '남돌/남자 아이돌' = 아이돌·팝 + gender '남', '여돌/걸그룹' = 아이돌·팝 + gender '여'
+- '주 장르/대표 장르' = 속함.role = 'main'
+- '봄 축제/가을 축제' = 축제.season
+- 대학 약칭(고려대, 연대, 성대 등)은 c.name CONTAINS '고려대' 처럼 부분 일치로 찾을 것. ('연대'→'연세대', '성대'→'성균관대', '경북대'처럼 그대로 쓰는 경우가 대부분)
+- 아티스트 검색: WHERE a.name CONTAINS '키워드' OR '키워드' IN a.aliases (한글/영문 어느 쪽으로 물어도 찾을 수 있게)
 
-### (2) Event (사건, 총 13개 — ⚠️ 모든 Event의 name은 띄어쓰기 없이 붙여쓰기 되어 있음!)
-- 속성: id ('E01'~'E13'), name, type
-- 전체 Event 노드 목록:
-  - '전단지수령', '인어섬방문', '세이렌조우', '토벌의뢰', '랏코납치', '동료구출', '세이렌위협', '세이렌토벌', '인어살해', '영생획득', '인어조림섭취', '인어섬송별회', '귀환'
+## 5. 데이터 유의사항 (edge_all_수정본 기준)
+- 장르가 없는 아티스트 2명(SINCE, 무한한사람들), 성별이 없는 아티스트 3명(SINCE, 무한한사람들, 신인류)이 있음. 장르 조건을 걸면 이들은 제외되므로, 장르가 필요 없는 질문에는 장르를 OPTIONAL MATCH로 붙일 것.
+- 서울대학교 '봄 축제 LUMINES'의 출연진은 보도 기사 기반 일부(5팀, review_status '확인필요')만 있고, '가을 축제 LUMINES'는 출연 데이터가 없음.
+- 출연 기록 없이 장르만 있는 아티스트가 7명 있음(예: 하현상, FTISLAND).
+- 스컬&하하, 우디&보라 같은 듀오 표기는 개별 아티스트(스컬·하하, 우디 (Woody)·보라)로 분리되어 있음. 원래 표기는 aliases에 있음.
 
-### (3) Place (장소, 총 9개 — ⚠️ 띄어쓰기 주의!)
-- 속성: id ('P01'~'P09'), name, type
-- 전체 Place 노드 목록:
-  - '치이카와의 집', '히토하와 후타바의 집', '선착장', '세이렌의 거처', '인어섬 마을', '시마지로의 가게', '숲', '해변', '동굴'
+## 6. 대표 질문별 표준 Cypher (Few-Shot)
+- 질문: "수도권과 비수도권 축제에 모두 출연한 아티스트는 누구이고 어떤 장르야?" (기획서 핵심 질문 1)
+MATCH (a:아티스트)-[:출연함]->(:축제)<-[:개최함]-(:대학)-[:위치함]->(l:지역)
+WITH a, collect(DISTINCT CASE WHEN l.region = '수도권' THEN '수도권' ELSE '비수도권' END) AS 권역
+WHERE size(권역) = 2
+OPTIONAL MATCH (a)-[r:속함]->(g:장르)
+RETURN a.name AS 아티스트, collect(DISTINCT g.name + '(' + coalesce(r.role, '-') + ')') AS 장르
+ORDER BY 아티스트
 
-### (4) Object (사물, 총 10개 — ⚠️ 띄어쓰기 주의!)
-- 속성: id ('O01'~'O10'), name, type
-- 전체 Object 노드 목록:
-  - '전단지', '토벌봉', '검', '인어 비늘', '사탕', '건전지', '인어 조림', '매운 카레', '캐롤라이나 리퍼 가루', '전설의 동물 도감'
+- 질문: "여러 대학 축제에 가장 많이 출연한 아티스트와 주 장르는?" (기획서 핵심 질문 2)
+MATCH (a:아티스트)-[:출연함]->(f:축제)<-[:개최함]-(c:대학)
+WITH a, count(DISTINCT f) AS 출연축제수, collect(DISTINCT c.name) AS 출연대학
+ORDER BY 출연축제수 DESC LIMIT 5
+OPTIONAL MATCH (a)-[:속함 {role: 'main'}]->(g:장르)
+RETURN a.name AS 아티스트, 출연축제수, 출연대학, collect(g.name) AS 주장르
 
-### (5) CulturalElement (문화적 요소, 총 8개 — ⚠️ 모두 붙여쓰기!)
-- 속성: id ('CE01'~'CE08'), name, type
-- 전체 CulturalElement 노드 목록:
-  - '축제', '인어설화', '바다신앙', '생선조림', '단팥과자', '탄산', '오사카사투리', '공동체음악'
+- 질문: "남자 아이돌을 섭외한 축제를 개최한 대학들은 주로 어느 지역에 있어?" (기획서 핵심 질문 3)
+MATCH (a:아티스트 {gender: '남'})-[:속함]->(:장르 {name: '아이돌·팝'})
+MATCH (a)-[:출연함]->(f:축제)<-[:개최함]-(c:대학)-[:위치함]->(l:지역)
+RETURN l.region AS 권역, count(DISTINCT c.name) AS 대학수, collect(DISTINCT c.name) AS 대학, collect(DISTINCT a.name) AS 섭외아티스트
+ORDER BY 대학수 DESC
 
-## 3. 관계(Relationship) 타입 및 방향성 (총 17종, 114개 관계)
-1. 인물 간 관계:
-   - (:Character)-[:FRIENDS_OF]-(:Character) : 친구 관계 (무방향 \`-[:FRIENDS_OF]-\` 권장)
-   - (:Character)-[:RIVAL_OF]-(:Character) : 대립/적대 관계 (치이카와->세이렌, 랏코->세이렌)
-   - (:Character)-[:ATTACKS]->(:Character) : 공격하다 (치이카와/하치와레/랏코/쿠리만쥬 -> 세이렌, 모몽가 -> 인어들)
-   - (:Character)-[:RESCUES]->(:Character) : 구출하다 (치이카와 -> 랏코/섬주민, 모몽가 -> 치이카와)
-   - (:Character)-[:KIDNAPS]->(:Character) : 납치하다 (세이렌 -> 하치와레/우사기/모몽가/랏코/카니/섬주민)
-   - (:Character)-[:KILLS]->(:Character) : 살해하다 (히토하 -> 인어들)
-2. 인물 - 사건 / 장소 / 사물 관계:
-   - (:Character)-[:PARTICIPATES_IN]->(:Event) : 사건에 참여하다 (치이카와/하치와레/우사기는 '전단지수령', '인어섬방문', '세이렌조우', '토벌의뢰', '동료구출', '세이렌토벌', '인어섬송별회', '귀환' 8개 사건에 참여; 히토하/후타바는 '인어살해', '인어조림섭취', '영생획득' 3개 사건에 참여)
-   - (:Character)-[:LIVES_IN]->(:Place) : 거주하다
-   - (:Character)-[:TRAVELS_TO]->(:Place) : 여행/방문하다 ('인어섬 마을')
-   - (:Character)-[:OPERATES]->(:Place) : 가게를 운영하다 (시마지로 -> 시마지로의 가게)
-   - (:Character)-[:USES]->(:Object) : 사물을 사용하다 (치이카와 -> 토벌봉/사탕, 랏코 -> 검, 시사 -> 캐롤라이나 리퍼 가루)
-   - (:Character)-[:EATS]->(:Object) : 음식을 먹다 (세이렌 -> 매운 카레/캐롤라이나 리퍼 가루. 히토하/후타바는 '인어조림섭취' Event에 PARTICIPATES_IN으로 연결됨)
-3. 사건 - 사건 / 장소 / 사물 관계:
-   - (:Event)-[:CAUSES]->(:Event) 및 (:Object {name: '전단지'})-[:CAUSES]->(:Event {name: '인어섬방문'}) : 사건 인과관계
-   - (:Event)-[:OCCURS_AT]->(:Place) : 사건이 발생한 장소
-   - (:Object)-[:REVEALS]->(:Event) : 사건의 진실을 밝히는 단서 ('인어 비늘', '전설의 동물 도감' -> '인어살해')
-4. 문화적 요소 관계:
-   - (:Event)-[:REFLECTS]->(:CulturalElement) 및 (:Character)-[:REFLECTS]->(:CulturalElement)
-   - (:Object)-[:ASSOCIATED_WITH]->(:CulturalElement)
+- 질문: "잔나비가 출연한 축제는 어느 대학 축제야?"
+MATCH (a:아티스트)-[:출연함]->(f:축제)<-[:개최함]-(c:대학)
+WHERE a.name CONTAINS '잔나비' OR '잔나비' IN a.aliases
+RETURN f.name AS 축제, c.display_name AS 대학, f.season AS 시즌, toString(f.start_date) AS 시작일
+ORDER BY f.start_date
 
-## 4. 데이터 유의사항 (CSV 원본 대조 결과)
-- 히토하/후타바 -[:EATS]-> '인어 조림' 관계는 적재 시 이름 불일치('인어조림')로 **존재하지 않음**. 인어 조림 섭취 여부는 \`(c)-[:PARTICIPATES_IN]->(:Event {name: '인어조림섭취'})\`로 조회할 것.
-- OCCURS_AT(발생 장소)가 없는 사건: '토벌의뢰', '세이렌위협', '영생획득', '인어조림섭취' → 장소 조회 시 반드시 OPTIONAL MATCH 사용.
-- '인어살해'는 장소가 '세이렌의 거처'이며, '인어조림섭취' → '영생획득' 및 '세이렌위협'의 원인(CAUSES)이 됨.
-- 일부 Event의 type 속성은 원본 데이터에서 한 칸씩 밀려 입력되어 있음('인어살해', '영생획득', '인어섬송별회' 등). 사건의 성격은 type보다 name과 관계로 판단할 것.
-- 별도의 Ability 노드는 없음 (Character.skills / Character.immortality 속성 사용).
+- 질문: "고려대 입실렌티 라인업 알려줘"
+MATCH (c:대학)-[:개최함]->(f:축제)<-[:출연함]-(a:아티스트)
+WHERE c.name CONTAINS '고려대' AND f.name CONTAINS '입실렌티'
+OPTIONAL MATCH (a)-[:속함 {role: 'main'}]->(g:장르)
+RETURN f.name AS 축제, a.name AS 아티스트, g.name AS 주장르
+ORDER BY 아티스트
 
-## 5. 대표 질문별 표준 Cypher 쿼리 예시 (Few-Shot, 기획서 검증 쿼리 포함)
-- 질문: "치이카와의 친구는 누구야?"
-MATCH (c:Character {name: '치이카와'})-[:FRIENDS_OF]-(friend:Character)
-RETURN DISTINCT friend.name AS 친구, friend.name_kor AS 별칭
+- 질문: "대학별로 가장 많이 섭외한 장르는?"
+MATCH (c:대학)-[:개최함]->(:축제)<-[:출연함]-(a:아티스트)-[:속함 {role: 'main'}]->(g:장르)
+WITH c.name AS 대학, g.name AS 장르, count(DISTINCT a) AS 아티스트수
+ORDER BY 대학, 아티스트수 DESC
+WITH 대학, collect({장르: 장르, 아티스트수: 아티스트수}) AS 분포
+RETURN 대학, 분포[0].장르 AS 최다장르, 분포[0].아티스트수 AS 아티스트수, 분포 AS 전체분포
+ORDER BY 대학
 
-- 질문: "가장 많은 사건에 참여한 캐릭터는 누구야?"
-MATCH (c:Character)-[:PARTICIPATES_IN]->(e:Event)
-RETURN c.name AS 캐릭터, count(DISTINCT e) AS 참여사건수, collect(DISTINCT e.name) AS 참여사건
-ORDER BY 참여사건수 DESC, 캐릭터
+- 질문: "권역별 축제에 출연한 밴드 수를 비교해줘"
+MATCH (l:지역)<-[:위치함]-(:대학)-[:개최함]->(:축제)<-[:출연함]-(a:아티스트)-[:속함]->(:장르 {name: '밴드'})
+RETURN l.region AS 권역, count(DISTINCT a) AS 밴드수, collect(DISTINCT a.name) AS 밴드
+ORDER BY 밴드수 DESC
 
-- 질문: "'인어살해' 사건을 밝혀내는 단서는 뭐야?"
-MATCH (clue:Object)-[:REVEALS]->(e:Event {name: '인어살해'})
-RETURN clue.name AS 단서, clue.type AS 단서유형
+- 질문: "에스파와 같은 축제에 출연한 아티스트는?"
+MATCH (a:아티스트)-[:출연함]->(f:축제)<-[:출연함]-(other:아티스트)
+WHERE (a.name CONTAINS '에스파' OR '에스파' IN a.aliases) AND other <> a
+RETURN f.name AS 축제, collect(DISTINCT other.name) AS 함께출연한아티스트
 
-- 질문: "세이렌에게 납치된 인물 중 치이카와가 구출한 인물은?"
-MATCH (:Character {name: '세이렌'})-[:KIDNAPS]->(c:Character)
-MATCH (:Character {name: '치이카와'})-[:RESCUES]->(c)
-RETURN DISTINCT c.name AS 인물
+- 질문: "가을에 열린 축제 중 힙합 아티스트가 가장 많이 나온 축제는?"
+MATCH (c:대학)-[:개최함]->(f:축제 {season: '가을'})<-[:출연함]-(a:아티스트)-[:속함]->(:장르 {name: '힙합'})
+RETURN f.name AS 축제, c.display_name AS 대학, count(DISTINCT a) AS 힙합아티스트수, collect(DISTINCT a.name) AS 아티스트
+ORDER BY 힙합아티스트수 DESC LIMIT 5
 
-- 질문: "가장 많은 인물이 참여한 사건은?"
-MATCH (c:Character)-[:PARTICIPATES_IN]->(e:Event)
-WITH e, count(DISTINCT c) AS 참여자수, collect(DISTINCT c.name) AS 참여자
-ORDER BY 참여자수 DESC
-WITH collect({사건: e.name, 참여자수: 참여자수, 참여자: 참여자}) AS rows
-WITH rows, rows[0].참여자수 AS maxCount
-UNWIND rows AS row
-WITH row, maxCount WHERE row.참여자수 = maxCount
-RETURN row.사건 AS 사건, row.참여자수 AS 참여자수, row.참여자 AS 참여자
-
-- 질문: "인어 설화와 연결된 인물·사건·사물은?"
-MATCH (n)-[r:REFLECTS|ASSOCIATED_WITH]->(:CulturalElement {name: '인어설화'})
-RETURN DISTINCT CASE WHEN n:Character THEN '인물' WHEN n:Event THEN '사건' ELSE '사물' END AS 구분,
-       n.name AS 이름, type(r) AS 관계
-ORDER BY 구분, 이름
-
-- 질문: "치이카와가 참여한 사건은 각각 어디에서 일어났어?"
-MATCH (:Character {name: '치이카와'})-[:PARTICIPATES_IN]->(e:Event)
-OPTIONAL MATCH (e)-[:OCCURS_AT]->(p:Place)
-RETURN e.name AS 사건, collect(DISTINCT p.name) AS 발생장소
-ORDER BY 사건
-
-- 질문: "'인어살해'에서 '영생획득'까지 어떤 사건들이 인과로 연결돼?" (다단계 인과는 가변 길이 경로 사용)
-MATCH p = (:Event {name: '인어살해'})-[:CAUSES*1..10]->(:Event {name: '영생획득'})
-RETURN [n IN nodes(p) | n.name] AS 사건흐름, length(p) AS 연결단계수
-ORDER BY 연결단계수
-
-- 질문: "'인어살해'는 어떤 후속 사건들에 영향을 주었어?"
-MATCH p = (:Event {name: '인어살해'})-[:CAUSES*1..5]->(next:Event)
-RETURN [n IN nodes(p) | n.name] AS 사건흐름, next.name AS 후속사건, length(p) AS 단계
-ORDER BY 단계
-
-- 질문: "치이카와와 히토하는 어떤 연결고리로 이어져 있어?" (두 개체 간 연결은 shortestPath)
-MATCH p = shortestPath((:Character {name: '치이카와'})-[*1..8]-(:Character {name: '히토하'}))
-RETURN [n IN nodes(p) | n.name] AS 연결경로, [r IN relationships(p) | type(r)] AS 관계유형, length(p) AS 연결단계수
-
-- 질문: "치이카와가 참여한 사건을 통해 어떤 문화 요소와 연결돼?"
-MATCH (:Character {name: '치이카와'})-[:PARTICIPATES_IN]->(e:Event)-[:REFLECTS]->(ce:CulturalElement)
-RETURN e.name AS 사건, ce.name AS 문화요소, ce.type AS 문화유형
-
-- 질문: "다른 등장인물과 직접 연결이 많은 인물은?"
-MATCH (c:Character)
-OPTIONAL MATCH (c)-[]-(other:Character) WHERE other <> c
-RETURN c.name AS 캐릭터, count(DISTINCT other) AS 연결인물수
-ORDER BY 연결인물수 DESC, 캐릭터
-
-- 질문: "전단지는 어떤 사건을 일으키고, 그 사건은 어떤 만남으로 이어져?"
-MATCH p = (:Object {name: '전단지'})-[:CAUSES]->(:Event {name: '인어섬방문'})-[:CAUSES]->(:Event {name: '세이렌조우'})
-RETURN [n IN nodes(p) | n.name] AS 사건흐름
-
-- 질문: "세이렌의 위협을 직접 일으킨 선행 사건은?"
-MATCH (cause:Event)-[:CAUSES]->(:Event {name: '세이렌위협'})
-RETURN cause.name AS 선행사건
-
-- 질문: "동료 구출 이후 어떤 사건들을 거쳐 귀환에 이르러?"
-MATCH p = (:Event {name: '동료구출'})-[:CAUSES*1..10]->(:Event {name: '귀환'})
-RETURN [n IN nodes(p) | n.name] AS 사건흐름, length(p) AS 연결단계수
-ORDER BY 연결단계수
-
-- 질문: "세이렌에게 납치된 캐릭터를 구출하기 위해 누가 참여했어?"
-MATCH (s:Character {name: '세이렌'})-[:KIDNAPS]->(victim:Character)
-OPTIONAL MATCH (rescuer:Character)-[:RESCUES]->(victim)
-OPTIONAL MATCH (helper:Character)-[:PARTICIPATES_IN]->(e:Event {name: '동료구출'})-[:OCCURS_AT]->(p:Place)
-RETURN DISTINCT s.name AS 납치범, collect(DISTINCT victim.name) AS 납치된캐릭터, collect(DISTINCT rescuer.name) AS 직접구출자, collect(DISTINCT helper.name) AS 동료구출참여자, e.name AS 구출사건, p.name AS 발생장소
-
-- 질문: "치이카와가 사용한 사물은 무엇이고 어떤 능력과 연결돼?"
-MATCH (c:Character {name: '치이카와'})-[:USES]->(o:Object)
-OPTIONAL MATCH (c)-[:PARTICIPATES_IN]->(e:Event)
-RETURN c.name AS 캐릭터, c.skills AS 보유기술, c.personality AS 성격, collect(DISTINCT o.name) AS 사용사물, collect(DISTINCT o.type) AS 사물유형, collect(DISTINCT e.name) AS 참여사건
-
-- 질문: "인어섬의 사건들은 어떤 순서로 서로 영향을 주었어?"
-MATCH (e1:Event)-[:CAUSES]->(e2:Event)
-OPTIONAL MATCH (e1)-[:OCCURS_AT]->(p1:Place)
-OPTIONAL MATCH (e2)-[:OCCURS_AT]->(p2:Place)
-RETURN e1.name AS 선행사건, p1.name AS 선행장소, e2.name AS 후속사건, p2.name AS 후속장소
-
-- 질문: "일본 전통문화와 연관된 사물이나 사건은 무엇이야?"
-MATCH (n)-[r:REFLECTS|ASSOCIATED_WITH]->(ce:CulturalElement)
-RETURN labels(n)[0] AS 구분, n.name AS 개체명, type(r) AS 관계, ce.name AS 문화요소, ce.type AS 문화유형
-ORDER BY ce.name, 구분
+- 질문: "국립대와 사립대 축제의 섭외 장르 차이는?"
+MATCH (c:대학)-[:개최함]->(:축제)<-[:출연함]-(a:아티스트)-[:속함 {role: 'main'}]->(g:장르)
+RETURN c.type AS 설립유형, g.name AS 장르, count(DISTINCT a) AS 아티스트수
+ORDER BY 설립유형, 아티스트수 DESC
 `;

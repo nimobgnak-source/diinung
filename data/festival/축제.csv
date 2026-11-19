@@ -1,0 +1,26 @@
+﻿class,id,name,location,start_date,end_date,college
+축제,festival-001,봄 축제 LUMINES,서울대학교 잔디광장,46154,46156,college-002
+축제,festival-002,"가을 축제 LUMINES ""Prologue with UnivAI""",서울대학교 잔디광장,46280,46282,college-002
+축제,festival-003,"입실렌티: 지.야의 함성 ""주인공""",고려대학교 서울캠퍼스 녹지운동장,46164,46164,college-001
+축제,festival-004,"석탑대동제 ""KUlimax""",고려대학교 서울캠퍼스 민주광장,46161,46163,college-001
+축제,festival-005,"라치오스 ""찬란""",한양대학교 노천극장,46169,46171,college-005
+축제,festival-006,ESKARA,성균관대학교 자연과학캠퍼스,46296,46297,college-004
+축제,festival-007,문행대동제,성균관대학교 인문사회캠퍼스,46156,46157,college-003
+축제,festival-008,아카라카를 온누리에,연세대학교 신촌캠퍼스 노천극장,46165,46165,college-019
+축제,festival-009,무악대동제,연세대학교 신촌캠퍼스,46168,46171,college-019
+축제,festival-010,"봄대동제 MASTERPEACE ""SOULMATE""",경희대학교 서울캠퍼스,46169,46171,college-006
+축제,festival-011,"가을대동제 MASTERPEACE ""WONDERLAND""",경희대학교 국제캠퍼스,46279,46280,college-007
+축제,festival-012,"가을문화제 ""청사진""",홍익대학교 서울캠퍼스,46301,46302,college-008
+축제,festival-013,"애국한양응원제 ""오름""",한양대학교 노천극장,46296,46297,college-005
+축제,festival-014,"2026 비룡제 ""BLUE SAGA""",인하대학교,46281,46283,college-010
+축제,festival-015,"대동제 ""아센티아""",아주대학교,46162,46164,college-011
+축제,festival-016,"가을 축제 ""바람""",아주대학교,46302,46303,college-011
+축제,festival-017,경북대학교 80주년 기념 KNU 대동제,경북대학교 대구캠퍼스,46162,46164,college-018
+축제,festival-018,부산대학교 대동제 피우리오,부산대학교 시월광장,46168,46170,college-012
+축제,festival-019,"용봉대동풀이 ""록스탤지아""",전남대학교 광주캠퍼스 종합운동장,46301,46302,college-013
+축제,festival-020,"건지 대동제 ""청풍명월""",전북대학교 전주캠퍼스 대운동장 특설무대,46148,46150,college-014
+축제,festival-021,학문체,전북대학교 학생타운 및 복합경기장,46273,46274,college-014
+축제,festival-022,GRACIA 축제,조선대학교 대운동장,46148,46150,college-015
+축제,festival-023,"가을 대동제 ""PRISM""",조선대학교 대운동장,46279,46281,college-015
+축제,festival-024,"백마 대동제 ""ACCESSIO : NOVA""",충남대학교 대덕캠퍼스 일원,46294,46295,college-016
+축제,festival-025,"개신 대동제 ""Everis""","충북대학교 개신캠퍼스 일원(개신문화광장, 사회과학대학 앞 도로 등)",46294,46296,college-017

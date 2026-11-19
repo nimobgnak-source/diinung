@@ -1,0 +1,406 @@
+﻿source_class,source_id,source_name,relationship,target_class,target_id,target_name,role,검수상태
+대학,college-001,고려대학교,위치함,지역,location-001,서울,,정상
+대학,college-002,서울대학교,위치함,지역,location-001,서울,,정상
+대학,college-003,성균관대학교,위치함,지역,location-001,서울,,정상
+대학,college-004,성균관대학교,위치함,지역,location-003,경기,,정상
+대학,college-005,한양대학교,위치함,지역,location-001,서울,,정상
+대학,college-006,경희대학교,위치함,지역,location-001,서울,,정상
+대학,college-007,경희대학교,위치함,지역,location-003,경기,,정상
+대학,college-008,홍익대학교,위치함,지역,location-001,서울,,정상
+대학,college-009,홍익대학교,위치함,지역,location-006,세종,,정상
+대학,college-010,인하대학교,위치함,지역,location-002,인천,,정상
+대학,college-011,아주대학교,위치함,지역,location-003,경기,,정상
+대학,college-012,부산대학교,위치함,지역,location-012,부산,,정상
+대학,college-013,전남대학교,위치함,지역,location-011,전남,,정상
+대학,college-014,전북대학교,위치함,지역,location-010,전북,,정상
+대학,college-015,조선대학교,위치함,지역,location-009,광주,,정상
+대학,college-016,충남대학교,위치함,지역,location-008,충남,,정상
+대학,college-017,충북대학교,위치함,지역,location-007,충북,,정상
+대학,college-018,경북대학교,위치함,지역,location-015,경북,,정상
+대학,college-019,연세대학교,위치함,지역,location-001,서울,,정상
+대학,college-002,서울대학교,개최함,축제,festival-001,봄 축제 LUMINES,,정상
+대학,college-002,서울대학교,개최함,축제,festival-002,"가을 축제 LUMINES ""Prologue with UnivAI""",,정상
+대학,college-001,고려대학교,개최함,축제,festival-003,"입실렌티: 지.야의 함성 ""주인공""",,정상
+대학,college-001,고려대학교,개최함,축제,festival-004,"석탑대동제 ""KUlimax""",,정상
+대학,college-005,한양대학교,개최함,축제,festival-005,"라치오스 ""찬란""",,정상
+대학,college-004,성균관대학교,개최함,축제,festival-006,ESKARA,,정상
+대학,college-003,성균관대학교,개최함,축제,festival-007,문행대동제,,정상
+대학,college-019,연세대학교,개최함,축제,festival-008,아카라카를 온누리에,,정상
+대학,college-019,연세대학교,개최함,축제,festival-009,무악대동제,,정상
+대학,college-006,경희대학교,개최함,축제,festival-010,"봄대동제 MASTERPEACE ""SOULMATE""",,정상
+대학,college-007,경희대학교,개최함,축제,festival-011,"가을대동제 MASTERPEACE ""WONDERLAND""",,정상
+대학,college-008,홍익대학교,개최함,축제,festival-012,"가을문화제 ""청사진""",,정상
+대학,college-005,한양대학교,개최함,축제,festival-013,"애국한양응원제 ""오름""",,정상
+대학,college-010,인하대학교,개최함,축제,festival-014,"2026 비룡제 ""BLUE SAGA""",,정상
+대학,college-011,아주대학교,개최함,축제,festival-015,"대동제 ""아센티아""",,정상
+대학,college-011,아주대학교,개최함,축제,festival-016,"가을 축제 ""바람""",,정상
+대학,college-018,경북대학교,개최함,축제,festival-017,경북대학교 80주년 기념 KNU 대동제,,정상
+대학,college-012,부산대학교,개최함,축제,festival-018,부산대학교 대동제 피우리오,,정상
+대학,college-013,전남대학교,개최함,축제,festival-019,"용봉대동풀이 ""록스탤지아""",,정상
+대학,college-014,전북대학교,개최함,축제,festival-020,"건지 대동제 ""청풍명월""",,정상
+대학,college-014,전북대학교,개최함,축제,festival-021,학문체,,정상
+대학,college-015,조선대학교,개최함,축제,festival-022,GRACIA 축제,,정상
+대학,college-015,조선대학교,개최함,축제,festival-023,"가을 대동제 ""PRISM""",,정상
+대학,college-016,충남대학교,개최함,축제,festival-024,"백마 대동제 ""ACCESSIO : NOVA""",,정상
+대학,college-017,충북대학교,개최함,축제,festival-025,"개신 대동제 ""Everis""",,정상
+아티스트,artist-035,pH-1,출연함,축제,festival-003,"입실렌티: 지.야의 함성 ""주인공""",,정상
+아티스트,artist-034,BIG Naughty,출연함,축제,festival-003,"입실렌티: 지.야의 함성 ""주인공""",,정상
+아티스트,artist-033,릴보이,출연함,축제,festival-003,"입실렌티: 지.야의 함성 ""주인공""",,정상
+아티스트,artist-032,우디고차일드,출연함,축제,festival-003,"입실렌티: 지.야의 함성 ""주인공""",,정상
+아티스트,artist-036,백예린,출연함,축제,festival-003,"입실렌티: 지.야의 함성 ""주인공""",,정상
+아티스트,artist-006,10CM,출연함,축제,festival-003,"입실렌티: 지.야의 함성 ""주인공""",,정상
+아티스트,artist-031,ALLDAY PROJECT,출연함,축제,festival-003,"입실렌티: 지.야의 함성 ""주인공""",,정상
+아티스트,artist-037,MEOVV (미야오),출연함,축제,festival-003,"입실렌티: 지.야의 함성 ""주인공""",,정상
+아티스트,artist-016,aespa,출연함,축제,festival-003,"입실렌티: 지.야의 함성 ""주인공""",,정상
+아티스트,artist-015,AKMU,출연함,축제,festival-003,"입실렌티: 지.야의 함성 ""주인공""",,정상
+아티스트,artist-014,태양,출연함,축제,festival-003,"입실렌티: 지.야의 함성 ""주인공""",,정상
+아티스트,artist-030,싸이,출연함,축제,festival-003,"입실렌티: 지.야의 함성 ""주인공""",,정상
+아티스트,artist-017,In A Minute,출연함,축제,festival-004,"석탑대동제 ""KUlimax""",,정상
+아티스트,artist-019,마이티 마우스,출연함,축제,festival-004,"석탑대동제 ""KUlimax""",,정상
+아티스트,artist-020,CORTIS,출연함,축제,festival-004,"석탑대동제 ""KUlimax""",,정상
+아티스트,artist-021,아일릿 (ILLIT),출연함,축제,festival-004,"석탑대동제 ""KUlimax""",,정상
+아티스트,artist-022,LE SSERAFIM (르세라핌),출연함,축제,festival-004,"석탑대동제 ""KUlimax""",,정상
+아티스트,artist-012,SAY MY NAME (세이마이네임),출연함,축제,festival-004,"석탑대동제 ""KUlimax""",,정상
+아티스트,artist-038,이지카이트,출연함,축제,festival-004,"석탑대동제 ""KUlimax""",,정상
+아티스트,artist-018,한로로,출연함,축제,festival-004,"석탑대동제 ""KUlimax""",,정상
+아티스트,artist-023,투모로우바이투게더,출연함,축제,festival-004,"석탑대동제 ""KUlimax""",,정상
+아티스트,artist-024,프로미스나인,출연함,축제,festival-004,"석탑대동제 ""KUlimax""",,정상
+아티스트,artist-119,무한한사람들,출연함,축제,festival-004,"석탑대동제 ""KUlimax""",,정상
+아티스트,artist-025,BOYNEXTDOOR,출연함,축제,festival-004,"석탑대동제 ""KUlimax""",,정상
+아티스트,artist-026,KiiKii (키키),출연함,축제,festival-004,"석탑대동제 ""KUlimax""",,정상
+아티스트,artist-027,나상현씨밴드,출연함,축제,festival-004,"석탑대동제 ""KUlimax""",,정상
+아티스트,artist-028,ODD YOUTH (오드유스),출연함,축제,festival-004,"석탑대동제 ""KUlimax""",,정상
+아티스트,artist-029,트랜스픽션,출연함,축제,festival-004,"석탑대동제 ""KUlimax""",,정상
+아티스트,artist-031,ALLDAY PROJECT,출연함,축제,festival-005,"라치오스 ""찬란""",,정상
+아티스트,artist-044,Dragon Pony (드래곤포니),출연함,축제,festival-005,"라치오스 ""찬란""",,정상
+아티스트,artist-074,장기하,출연함,축제,festival-005,"라치오스 ""찬란""",,정상
+아티스트,artist-115,SINCE,출연함,축제,festival-005,"라치오스 ""찬란""",,정상
+아티스트,artist-041,다이나믹 듀오,출연함,축제,festival-005,"라치오스 ""찬란""",,정상
+아티스트,artist-016,aespa,출연함,축제,festival-005,"라치오스 ""찬란""",,정상
+아티스트,artist-035,pH-1,출연함,축제,festival-005,"라치오스 ""찬란""",,정상
+아티스트,artist-034,BIG Naughty,출연함,축제,festival-005,"라치오스 ""찬란""",,정상
+아티스트,artist-046,윤마치 (MRCH),출연함,축제,festival-005,"라치오스 ""찬란""",,정상
+아티스트,artist-026,KiiKii (키키),출연함,축제,festival-005,"라치오스 ""찬란""",,정상
+아티스트,artist-069,다비치,출연함,축제,festival-005,"라치오스 ""찬란""",,정상
+아티스트,artist-053,WINNER,출연함,축제,festival-005,"라치오스 ""찬란""",,정상
+아티스트,artist-054,Hearts2Hearts (하츠투하츠),출연함,축제,festival-005,"라치오스 ""찬란""",,정상
+아티스트,artist-030,싸이,출연함,축제,festival-005,"라치오스 ""찬란""",,정상
+아티스트,artist-036,백예린,출연함,축제,festival-005,"라치오스 ""찬란""",,정상
+아티스트,artist-043,YB (윤도현 밴드),출연함,축제,festival-005,"라치오스 ""찬란""",,정상
+아티스트,artist-058,Keyveatz,출연함,축제,festival-006,ESKARA,,정상
+아티스트,artist-072,거미,출연함,축제,festival-006,ESKARA,,정상
+아티스트,artist-068,WAYF BOYS(웨이프보이즈),출연함,축제,festival-006,ESKARA,,정상
+아티스트,artist-043,YB (윤도현 밴드),출연함,축제,festival-006,ESKARA,,정상
+아티스트,artist-073,이서연 (Y: SY),출연함,축제,festival-006,ESKARA,,정상
+아티스트,artist-044,Dragon Pony (드래곤포니),출연함,축제,festival-006,ESKARA,,정상
+아티스트,artist-074,장기하,출연함,축제,festival-006,ESKARA,,정상
+아티스트,artist-075,STACY(스테이씨),출연함,축제,festival-006,ESKARA,,정상
+아티스트,artist-076,YENA (최예나),출연함,축제,festival-006,ESKARA,,정상
+아티스트,artist-031,ALLDAY PROJECT,출연함,축제,festival-006,ESKARA,,정상
+아티스트,artist-064,GRAY (그레이),출연함,축제,festival-006,ESKARA,,정상
+아티스트,artist-065,로꼬,출연함,축제,festival-006,ESKARA,,정상
+아티스트,artist-077,사이먼 도미닉,출연함,축제,festival-006,ESKARA,,정상
+아티스트,artist-067,이무진,출연함,축제,festival-007,문행대동제,,정상
+아티스트,artist-069,다비치,출연함,축제,festival-007,문행대동제,,정상
+아티스트,artist-024,프로미스나인,출연함,축제,festival-007,문행대동제,,정상
+아티스트,artist-070,QWER,출연함,축제,festival-007,문행대동제,,정상
+아티스트,artist-071,로이킴,출연함,축제,festival-007,문행대동제,,정상
+아티스트,artist-036,백예린,출연함,축제,festival-007,문행대동제,,정상
+아티스트,artist-042,잔나비,출연함,축제,festival-007,문행대동제,,정상
+아티스트,artist-002,박재범,출연함,축제,festival-008,아카라카를 온누리에,,정상
+아티스트,artist-039,박진영,출연함,축제,festival-008,아카라카를 온누리에,,정상
+아티스트,artist-040,볼빨간사춘기,출연함,축제,festival-008,아카라카를 온누리에,,정상
+아티스트,artist-041,다이나믹 듀오,출연함,축제,festival-008,아카라카를 온누리에,,정상
+아티스트,artist-022,LE SSERAFIM (르세라핌),출연함,축제,festival-008,아카라카를 온누리에,,정상
+아티스트,artist-016,aespa,출연함,축제,festival-008,아카라카를 온누리에,,정상
+아티스트,artist-042,잔나비,출연함,축제,festival-008,아카라카를 온누리에,,정상
+아티스트,artist-043,YB (윤도현 밴드),출연함,축제,festival-009,무악대동제,,정상
+아티스트,artist-044,Dragon Pony (드래곤포니),출연함,축제,festival-009,무악대동제,,정상
+아티스트,artist-005,실리카겔,출연함,축제,festival-009,무악대동제,,정상
+아티스트,artist-045,터치드 (TOUCHED),출연함,축제,festival-009,무악대동제,,정상
+아티스트,artist-046,윤마치 (MRCH),출연함,축제,festival-009,무악대동제,,정상
+아티스트,artist-120,신인류,출연함,축제,festival-009,무악대동제,,정상
+아티스트,artist-103,"카더가든(Car, the garden)",출연함,축제,festival-009,무악대동제,,정상
+아티스트,artist-047,넬 (NELL),출연함,축제,festival-009,무악대동제,,정상
+아티스트,artist-048,데이먼스 이어 (Damons year),출연함,축제,festival-009,무악대동제,,정상
+아티스트,artist-049,리도어 (Redoor),출연함,축제,festival-009,무악대동제,,정상
+아티스트,artist-050,오존 (O3ohn),출연함,축제,festival-009,무악대동제,,정상
+아티스트,artist-051,민수,출연함,축제,festival-009,무악대동제,,정상
+아티스트,artist-058,Keyveatz,출연함,축제,festival-010,"봄대동제 MASTERPEACE ""SOULMATE""",,정상
+아티스트,artist-043,YB (윤도현 밴드),출연함,축제,festival-010,"봄대동제 MASTERPEACE ""SOULMATE""",,정상
+아티스트,artist-031,ALLDAY PROJECT,출연함,축제,festival-010,"봄대동제 MASTERPEACE ""SOULMATE""",,정상
+아티스트,artist-115,SINCE,출연함,축제,festival-010,"봄대동제 MASTERPEACE ""SOULMATE""",,정상
+아티스트,artist-035,pH-1,출연함,축제,festival-010,"봄대동제 MASTERPEACE ""SOULMATE""",,정상
+아티스트,artist-033,릴보이,출연함,축제,festival-010,"봄대동제 MASTERPEACE ""SOULMATE""",,정상
+아티스트,artist-034,BIG Naughty,출연함,축제,festival-010,"봄대동제 MASTERPEACE ""SOULMATE""",,정상
+아티스트,artist-032,우디고차일드,출연함,축제,festival-010,"봄대동제 MASTERPEACE ""SOULMATE""",,정상
+아티스트,artist-024,프로미스나인,출연함,축제,festival-010,"봄대동제 MASTERPEACE ""SOULMATE""",,정상
+아티스트,artist-041,다이나믹 듀오,출연함,축제,festival-010,"봄대동제 MASTERPEACE ""SOULMATE""",,정상
+아티스트,artist-059,KISS OF LIFE,출연함,축제,festival-010,"봄대동제 MASTERPEACE ""SOULMATE""",,정상
+아티스트,artist-042,잔나비,출연함,축제,festival-010,"봄대동제 MASTERPEACE ""SOULMATE""",,정상
+아티스트,artist-030,싸이,출연함,축제,festival-010,"봄대동제 MASTERPEACE ""SOULMATE""",,정상
+아티스트,artist-048,데이먼스 이어 (Damons year),출연함,축제,festival-011,"가을대동제 MASTERPEACE ""WONDERLAND""",,정상
+아티스트,artist-052,창모 (CHANGMO),출연함,축제,festival-011,"가을대동제 MASTERPEACE ""WONDERLAND""",,정상
+아티스트,artist-049,리도어 (Redoor),출연함,축제,festival-011,"가을대동제 MASTERPEACE ""WONDERLAND""",,정상
+아티스트,artist-053,WINNER,출연함,축제,festival-011,"가을대동제 MASTERPEACE ""WONDERLAND""",,정상
+아티스트,artist-054,Hearts2Hearts (하츠투하츠),출연함,축제,festival-011,"가을대동제 MASTERPEACE ""WONDERLAND""",,정상
+아티스트,artist-055,최유리,출연함,축제,festival-011,"가을대동제 MASTERPEACE ""WONDERLAND""",,정상
+아티스트,artist-013,어반자카파,출연함,축제,festival-011,"가을대동제 MASTERPEACE ""WONDERLAND""",,정상
+아티스트,artist-056,권은비,출연함,축제,festival-011,"가을대동제 MASTERPEACE ""WONDERLAND""",,정상
+아티스트,artist-057,P1Harmony,출연함,축제,festival-011,"가을대동제 MASTERPEACE ""WONDERLAND""",,정상
+아티스트,artist-047,넬 (NELL),출연함,축제,festival-011,"가을대동제 MASTERPEACE ""WONDERLAND""",,정상
+아티스트,artist-007,김하온 (HAON),출연함,축제,festival-011,"가을대동제 MASTERPEACE ""WONDERLAND""",,정상
+아티스트,artist-010,NOWIMYOUNG (나우아임영),출연함,축제,festival-011,"가을대동제 MASTERPEACE ""WONDERLAND""",,정상
+아티스트,artist-067,이무진,출연함,축제,festival-012,"가을문화제 ""청사진""",,정상
+아티스트,artist-068,WAYF BOYS(웨이프보이즈),출연함,축제,festival-012,"가을문화제 ""청사진""",,정상
+아티스트,artist-031,ALLDAY PROJECT,출연함,축제,festival-012,"가을문화제 ""청사진""",,정상
+아티스트,artist-059,KISS OF LIFE,출연함,축제,festival-013,"애국한양응원제 ""오름""",,정상
+아티스트,artist-042,잔나비,출연함,축제,festival-013,"애국한양응원제 ""오름""",,정상
+아티스트,artist-049,리도어 (Redoor),출연함,축제,festival-013,"애국한양응원제 ""오름""",,정상
+아티스트,artist-058,Keyveatz,출연함,축제,festival-013,"애국한양응원제 ""오름""",,정상
+아티스트,artist-048,데이먼스 이어 (Damons year),출연함,축제,festival-013,"애국한양응원제 ""오름""",,정상
+아티스트,artist-052,창모 (CHANGMO),출연함,축제,festival-013,"애국한양응원제 ""오름""",,정상
+아티스트,artist-078,다영 (DAYOUNG),출연함,축제,festival-013,"애국한양응원제 ""오름""",,정상
+아티스트,artist-079,하이라이트 (HIGHLIGHT),출연함,축제,festival-013,"애국한양응원제 ""오름""",,정상
+아티스트,artist-024,프로미스나인,출연함,축제,festival-013,"애국한양응원제 ""오름""",,정상
+아티스트,artist-024,프로미스나인,출연함,축제,festival-014,"2026 비룡제 ""BLUE SAGA""",,정상
+아티스트,artist-077,사이먼 도미닉,출연함,축제,festival-014,"2026 비룡제 ""BLUE SAGA""",,정상
+아티스트,artist-056,권은비,출연함,축제,festival-014,"2026 비룡제 ""BLUE SAGA""",,정상
+아티스트,artist-042,잔나비,출연함,축제,festival-014,"2026 비룡제 ""BLUE SAGA""",,정상
+아티스트,artist-074,장기하,출연함,축제,festival-014,"2026 비룡제 ""BLUE SAGA""",,정상
+아티스트,artist-080,희규,출연함,축제,festival-014,"2026 비룡제 ""BLUE SAGA""",,정상
+아티스트,artist-081,ZIon.T,출연함,축제,festival-014,"2026 비룡제 ""BLUE SAGA""",,정상
+아티스트,artist-082,비비 (BIBI),출연함,축제,festival-014,"2026 비룡제 ""BLUE SAGA""",,정상
+아티스트,artist-018,한로로,출연함,축제,festival-014,"2026 비룡제 ""BLUE SAGA""",,정상
+아티스트,artist-083,체리필터 (cherryfilter),출연함,축제,festival-014,"2026 비룡제 ""BLUE SAGA""",,정상
+아티스트,artist-084,로시 (Rothy),출연함,축제,festival-014,"2026 비룡제 ""BLUE SAGA""",,정상
+아티스트,artist-049,리도어 (Redoor),출연함,축제,festival-014,"2026 비룡제 ""BLUE SAGA""",,정상
+아티스트,artist-037,MEOVV (미야오),출연함,축제,festival-014,"2026 비룡제 ""BLUE SAGA""",,정상
+아티스트,artist-085,스컬,출연함,축제,festival-014,"2026 비룡제 ""BLUE SAGA""",,정상
+아티스트,artist-061,하하,출연함,축제,festival-014,"2026 비룡제 ""BLUE SAGA""",,정상
+아티스트,artist-003,RESCENE (리센느),출연함,축제,festival-014,"2026 비룡제 ""BLUE SAGA""",,정상
+아티스트,artist-042,잔나비,출연함,축제,festival-015,"대동제 ""아센티아""",,정상
+아티스트,artist-030,싸이,출연함,축제,festival-015,"대동제 ""아센티아""",,정상
+아티스트,artist-087,cosmosy,출연함,축제,festival-015,"대동제 ""아센티아""",,정상
+아티스트,artist-046,윤마치 (MRCH),출연함,축제,festival-015,"대동제 ""아센티아""",,정상
+아티스트,artist-043,YB (윤도현 밴드),출연함,축제,festival-015,"대동제 ""아센티아""",,정상
+아티스트,artist-086,Crush,출연함,축제,festival-015,"대동제 ""아센티아""",,정상
+아티스트,artist-008,tripleS (트리플에스),출연함,축제,festival-015,"대동제 ""아센티아""",,정상
+아티스트,artist-058,Keyveatz,출연함,축제,festival-015,"대동제 ""아센티아""",,정상
+아티스트,artist-024,프로미스나인,출연함,축제,festival-016,"가을 축제 ""바람""",,정상
+아티스트,artist-056,권은비,출연함,축제,festival-017,경북대학교 80주년 기념 KNU 대동제,,정상
+아티스트,artist-009,NCT WISH,출연함,축제,festival-017,경북대학교 80주년 기념 KNU 대동제,,정상
+아티스트,artist-123,아이칠린,출연함,축제,festival-017,경북대학교 80주년 기념 KNU 대동제,,정상
+아티스트,artist-124,지코,출연함,축제,festival-017,경북대학교 80주년 기념 KNU 대동제,,정상
+아티스트,artist-125,선미,출연함,축제,festival-017,경북대학교 80주년 기념 KNU 대동제,,정상
+아티스트,artist-126,이영지,출연함,축제,festival-017,경북대학교 80주년 기념 KNU 대동제,,정상
+아티스트,artist-030,싸이,출연함,축제,festival-018,부산대학교 대동제 피우리오,,정상
+아티스트,artist-082,비비 (BIBI),출연함,축제,festival-018,부산대학교 대동제 피우리오,,정상
+아티스트,artist-007,김하온 (HAON),출연함,축제,festival-018,부산대학교 대동제 피우리오,,정상
+아티스트,artist-010,NOWIMYOUNG (나우아임영),출연함,축제,festival-018,부산대학교 대동제 피우리오,,정상
+아티스트,artist-058,Keyveatz,출연함,축제,festival-018,부산대학교 대동제 피우리오,,정상
+아티스트,artist-059,KISS OF LIFE,출연함,축제,festival-018,부산대학교 대동제 피우리오,,정상
+아티스트,artist-042,잔나비,출연함,축제,festival-018,부산대학교 대동제 피우리오,,정상
+아티스트,artist-086,Crush,출연함,축제,festival-018,부산대학교 대동제 피우리오,,정상
+아티스트,artist-089,MADEIN (메이딘),출연함,축제,festival-018,부산대학교 대동제 피우리오,,정상
+아티스트,artist-025,BOYNEXTDOOR,출연함,축제,festival-018,부산대학교 대동제 피우리오,,정상
+아티스트,artist-092,헤이즈 (Heize),출연함,축제,festival-018,부산대학교 대동제 피우리오,,정상
+아티스트,artist-127,양홍원,출연함,축제,festival-018,부산대학교 대동제 피우리오,,정상
+아티스트,artist-114,NO:EL,출연함,축제,festival-018,부산대학교 대동제 피우리오,,정상
+아티스트,artist-113,Ksmartboi,출연함,축제,festival-018,부산대학교 대동제 피우리오,,정상
+아티스트,artist-088,더윈드 (The Wind),출연함,축제,festival-018,부산대학교 대동제 피우리오,,정상
+아티스트,artist-093,죠지,출연함,축제,festival-019,"용봉대동풀이 ""록스탤지아""",,정상
+아티스트,artist-094,우디 (Woody),출연함,축제,festival-019,"용봉대동풀이 ""록스탤지아""",,정상
+아티스트,artist-095,보라,출연함,축제,festival-019,"용봉대동풀이 ""록스탤지아""",,정상
+아티스트,artist-128,전소연,출연함,축제,festival-019,"용봉대동풀이 ""록스탤지아""",,정상
+아티스트,artist-043,YB (윤도현 밴드),출연함,축제,festival-019,"용봉대동풀이 ""록스탤지아""",,정상
+아티스트,artist-129,예빛,출연함,축제,festival-020,"건지 대동제 ""청풍명월""",,정상
+아티스트,artist-096,e sense,출연함,축제,festival-020,"건지 대동제 ""청풍명월""",,정상
+아티스트,artist-008,tripleS (트리플에스),출연함,축제,festival-020,"건지 대동제 ""청풍명월""",,정상
+아티스트,artist-130,이승윤,출연함,축제,festival-020,"건지 대동제 ""청풍명월""",,정상
+아티스트,artist-065,로꼬,출연함,축제,festival-021,학문체,,정상
+아티스트,artist-099,쿠기 (Coogie),출연함,축제,festival-021,학문체,,정상
+아티스트,artist-092,헤이즈 (Heize),출연함,축제,festival-022,GRACIA 축제,,정상
+아티스트,artist-086,Crush,출연함,축제,festival-022,GRACIA 축제,,정상
+아티스트,artist-063,엔플라잉 (N. Flying),출연함,축제,festival-022,GRACIA 축제,,정상
+아티스트,artist-008,tripleS (트리플에스),출연함,축제,festival-022,GRACIA 축제,,정상
+아티스트,artist-082,비비 (BIBI),출연함,축제,festival-022,GRACIA 축제,,정상
+아티스트,artist-042,잔나비,출연함,축제,festival-022,GRACIA 축제,,정상
+아티스트,artist-049,리도어 (Redoor),출연함,축제,festival-022,GRACIA 축제,,정상
+아티스트,artist-026,KiiKii (키키),출연함,축제,festival-022,GRACIA 축제,,정상
+아티스트,artist-100,Sik-K,출연함,축제,festival-022,GRACIA 축제,,정상
+아티스트,artist-007,김하온 (HAON),출연함,축제,festival-022,GRACIA 축제,,정상
+아티스트,artist-010,NOWIMYOUNG (나우아임영),출연함,축제,festival-022,GRACIA 축제,,정상
+아티스트,artist-101,조유리,출연함,축제,festival-023,"가을 대동제 ""PRISM""",,정상
+아티스트,artist-056,권은비,출연함,축제,festival-023,"가을 대동제 ""PRISM""",,정상
+아티스트,artist-076,YENA (최예나),출연함,축제,festival-023,"가을 대동제 ""PRISM""",,정상
+아티스트,artist-129,예빛,출연함,축제,festival-023,"가을 대동제 ""PRISM""",,정상
+아티스트,artist-102,츄(CHUU),출연함,축제,festival-023,"가을 대동제 ""PRISM""",,정상
+아티스트,artist-103,"카더가든(Car, the garden)",출연함,축제,festival-023,"가을 대동제 ""PRISM""",,정상
+아티스트,artist-104,빌리(Billie),출연함,축제,festival-023,"가을 대동제 ""PRISM""",,정상
+아티스트,artist-053,WINNER,출연함,축제,festival-023,"가을 대동제 ""PRISM""",,정상
+아티스트,artist-069,다비치,출연함,축제,festival-023,"가을 대동제 ""PRISM""",,정상
+아티스트,artist-128,전소연,출연함,축제,festival-023,"가을 대동제 ""PRISM""",,정상
+아티스트,artist-100,Sik-K,출연함,축제,festival-023,"가을 대동제 ""PRISM""",,정상
+아티스트,artist-007,김하온 (HAON),출연함,축제,festival-023,"가을 대동제 ""PRISM""",,정상
+아티스트,artist-010,NOWIMYOUNG (나우아임영),출연함,축제,festival-023,"가을 대동제 ""PRISM""",,정상
+아티스트,artist-105,JMIN,출연함,축제,festival-023,"가을 대동제 ""PRISM""",,정상
+아티스트,artist-106,아홉(AHOF),출연함,축제,festival-024,"백마 대동제 ""ACCESSIO : NOVA""",,정상
+아티스트,artist-081,ZIon.T,출연함,축제,festival-024,"백마 대동제 ""ACCESSIO : NOVA""",,정상
+아티스트,artist-079,하이라이트 (HIGHLIGHT),출연함,축제,festival-024,"백마 대동제 ""ACCESSIO : NOVA""",,정상
+아티스트,artist-069,다비치,출연함,축제,festival-024,"백마 대동제 ""ACCESSIO : NOVA""",,정상
+아티스트,artist-008,tripleS (트리플에스),출연함,축제,festival-024,"백마 대동제 ""ACCESSIO : NOVA""",,정상
+아티스트,artist-107,효린(Hyolin),출연함,축제,festival-024,"백마 대동제 ""ACCESSIO : NOVA""",,정상
+아티스트,artist-108,매드클라운(Mad Clown),출연함,축제,festival-024,"백마 대동제 ""ACCESSIO : NOVA""",,정상
+아티스트,artist-001,너드커넥션,출연함,축제,festival-024,"백마 대동제 ""ACCESSIO : NOVA""",,정상
+아티스트,artist-063,엔플라잉 (N. Flying),출연함,축제,festival-025,"개신 대동제 ""Everis""",,정상
+아티스트,artist-078,다영 (DAYOUNG),출연함,축제,festival-025,"개신 대동제 ""Everis""",,정상
+아티스트,artist-109,OURBIRTHDAY (아워벌스데이),출연함,축제,festival-025,"개신 대동제 ""Everis""",,정상
+아티스트,artist-110,ASH ISLAND (윤진영),출연함,축제,festival-025,"개신 대동제 ""Everis""",,정상
+아티스트,artist-052,창모 (CHANGMO),출연함,축제,festival-025,"개신 대동제 ""Everis""",,정상
+아티스트,artist-111,하이키(H1-KEY),출연함,축제,festival-025,"개신 대동제 ""Everis""",,정상
+아티스트,artist-028,ODD YOUTH (오드유스),출연함,축제,festival-025,"개신 대동제 ""Everis""",,정상
+아티스트,artist-011,영파씨,출연함,축제,festival-001,봄 축제 LUMINES,,확인필요
+아티스트,artist-012,SAY MY NAME (세이마이네임),출연함,축제,festival-001,봄 축제 LUMINES,,확인필요
+아티스트,artist-010,NOWIMYOUNG (나우아임영),출연함,축제,festival-001,봄 축제 LUMINES,,확인필요
+아티스트,artist-008,tripleS (트리플에스),출연함,축제,festival-001,봄 축제 LUMINES,,확인필요
+아티스트,artist-009,NCT WISH,출연함,축제,festival-001,봄 축제 LUMINES,,확인필요
+아티스트,artist-001,너드커넥션,속함,장르,genre-001,밴드,main,정상
+아티스트,artist-002,박재범,속함,장르,genre-004,힙합,main,정상
+아티스트,artist-003,RESCENE (리센느),속함,장르,genre-002,아이돌·팝,main,정상
+아티스트,artist-004,하현상,속함,장르,genre-005,발라드,main,정상
+아티스트,artist-004,하현상,속함,장르,genre-003,싱어송라이터,sub,정상
+아티스트,artist-005,실리카겔,속함,장르,genre-001,밴드,main,정상
+아티스트,artist-006,10CM,속함,장르,genre-003,싱어송라이터,main,정상
+아티스트,artist-006,10CM,속함,장르,genre-005,발라드,sub,정상
+아티스트,artist-007,김하온 (HAON),속함,장르,genre-004,힙합,main,정상
+아티스트,artist-008,tripleS (트리플에스),속함,장르,genre-002,아이돌·팝,main,정상
+아티스트,artist-009,NCT WISH,속함,장르,genre-002,아이돌·팝,main,정상
+아티스트,artist-010,NOWIMYOUNG (나우아임영),속함,장르,genre-004,힙합,main,정상
+아티스트,artist-011,영파씨,속함,장르,genre-002,아이돌·팝,main,정상
+아티스트,artist-012,SAY MY NAME (세이마이네임),속함,장르,genre-002,아이돌·팝,main,정상
+아티스트,artist-013,어반자카파,속함,장르,genre-005,발라드,main,정상
+아티스트,artist-013,어반자카파,속함,장르,genre-003,싱어송라이터,sub,정상
+아티스트,artist-014,태양,속함,장르,genre-002,아이돌·팝,main,정상
+아티스트,artist-015,AKMU,속함,장르,genre-003,싱어송라이터,main,정상
+아티스트,artist-016,aespa,속함,장르,genre-002,아이돌·팝,main,정상
+아티스트,artist-017,In A Minute,속함,장르,genre-006,기타,미분류,정상
+아티스트,artist-018,한로로,속함,장르,genre-003,싱어송라이터,main,정상
+아티스트,artist-018,한로로,속함,장르,genre-001,밴드,sub,정상
+아티스트,artist-019,마이티 마우스,속함,장르,genre-004,힙합,main,정상
+아티스트,artist-020,CORTIS,속함,장르,genre-002,아이돌·팝,main,정상
+아티스트,artist-020,CORTIS,속함,장르,genre-004,힙합,sub,정상
+아티스트,artist-021,아일릿 (ILLIT),속함,장르,genre-002,아이돌·팝,main,정상
+아티스트,artist-022,LE SSERAFIM (르세라핌),속함,장르,genre-002,아이돌·팝,main,정상
+아티스트,artist-023,투모로우바이투게더,속함,장르,genre-002,아이돌·팝,main,정상
+아티스트,artist-024,프로미스나인,속함,장르,genre-002,아이돌·팝,main,정상
+아티스트,artist-025,BOYNEXTDOOR,속함,장르,genre-002,아이돌·팝,main,정상
+아티스트,artist-026,KiiKii (키키),속함,장르,genre-002,아이돌·팝,main,정상
+아티스트,artist-027,나상현씨밴드,속함,장르,genre-001,밴드,main,정상
+아티스트,artist-028,ODD YOUTH (오드유스),속함,장르,genre-001,밴드,main,정상
+아티스트,artist-029,트랜스픽션,속함,장르,genre-001,밴드,main,정상
+아티스트,artist-030,싸이,속함,장르,genre-002,아이돌·팝,main,정상
+아티스트,artist-030,싸이,속함,장르,genre-004,힙합,sub,정상
+아티스트,artist-031,ALLDAY PROJECT,속함,장르,genre-002,아이돌·팝,main,정상
+아티스트,artist-032,우디고차일드,속함,장르,genre-004,힙합,main,정상
+아티스트,artist-033,릴보이,속함,장르,genre-004,힙합,main,정상
+아티스트,artist-034,BIG Naughty,속함,장르,genre-004,힙합,main,정상
+아티스트,artist-035,pH-1,속함,장르,genre-004,힙합,main,정상
+아티스트,artist-036,백예린,속함,장르,genre-003,싱어송라이터,main,정상
+아티스트,artist-037,MEOVV (미야오),속함,장르,genre-002,아이돌·팝,main,정상
+아티스트,artist-038,이지카이트,속함,장르,genre-003,싱어송라이터,main,정상
+아티스트,artist-039,박진영,속함,장르,genre-002,아이돌·팝,main,정상
+아티스트,artist-040,볼빨간사춘기,속함,장르,genre-003,싱어송라이터,main,정상
+아티스트,artist-041,다이나믹 듀오,속함,장르,genre-004,힙합,main,정상
+아티스트,artist-042,잔나비,속함,장르,genre-001,밴드,main,정상
+아티스트,artist-043,YB (윤도현 밴드),속함,장르,genre-001,밴드,main,정상
+아티스트,artist-044,Dragon Pony (드래곤포니),속함,장르,genre-001,밴드,main,정상
+아티스트,artist-045,터치드 (TOUCHED),속함,장르,genre-001,밴드,main,정상
+아티스트,artist-046,윤마치 (MRCH),속함,장르,genre-003,싱어송라이터,main,정상
+아티스트,artist-047,넬 (NELL),속함,장르,genre-001,밴드,main,정상
+아티스트,artist-048,데이먼스 이어 (Damons year),속함,장르,genre-001,밴드,main,정상
+아티스트,artist-049,리도어 (Redoor),속함,장르,genre-001,밴드,main,정상
+아티스트,artist-050,오존 (O3ohn),속함,장르,genre-003,싱어송라이터,main,정상
+아티스트,artist-051,민수,속함,장르,genre-003,싱어송라이터,main,정상
+아티스트,artist-052,창모 (CHANGMO),속함,장르,genre-004,힙합,main,정상
+아티스트,artist-053,WINNER,속함,장르,genre-002,아이돌·팝,main,정상
+아티스트,artist-054,Hearts2Hearts (하츠투하츠),속함,장르,genre-002,아이돌·팝,main,정상
+아티스트,artist-055,최유리,속함,장르,genre-003,싱어송라이터,main,정상
+아티스트,artist-056,권은비,속함,장르,genre-002,아이돌·팝,main,정상
+아티스트,artist-057,P1Harmony,속함,장르,genre-002,아이돌·팝,main,정상
+아티스트,artist-058,Keyveatz,속함,장르,genre-004,힙합,main,정상
+아티스트,artist-058,Keyveatz,속함,장르,genre-002,아이돌·팝,sub,정상
+아티스트,artist-059,KISS OF LIFE,속함,장르,genre-002,아이돌·팝,main,정상
+아티스트,artist-060,H//PE Princess(하입프린세스),속함,장르,genre-004,힙합,main,정상
+아티스트,artist-060,H//PE Princess(하입프린세스),속함,장르,genre-002,아이돌·팝,sub,정상
+아티스트,artist-061,하하,속함,장르,genre-006,기타,미분류,정상
+아티스트,artist-062,키노,속함,장르,genre-002,아이돌·팝,main,정상
+아티스트,artist-063,엔플라잉 (N. Flying),속함,장르,genre-001,밴드,main,정상
+아티스트,artist-063,엔플라잉 (N. Flying),속함,장르,genre-002,아이돌·팝,sub,정상
+아티스트,artist-064,GRAY (그레이),속함,장르,genre-004,힙합,main,정상
+아티스트,artist-065,로꼬,속함,장르,genre-004,힙합,main,정상
+아티스트,artist-066,우원재,속함,장르,genre-004,힙합,main,정상
+아티스트,artist-067,이무진,속함,장르,genre-003,싱어송라이터,main,정상
+아티스트,artist-068,WAYF BOYS(웨이프보이즈),속함,장르,genre-002,아이돌·팝,main,정상
+아티스트,artist-069,다비치,속함,장르,genre-005,발라드,main,정상
+아티스트,artist-070,QWER,속함,장르,genre-001,밴드,main,정상
+아티스트,artist-070,QWER,속함,장르,genre-002,아이돌·팝,sub,정상
+아티스트,artist-071,로이킴,속함,장르,genre-003,싱어송라이터,main,정상
+아티스트,artist-071,로이킴,속함,장르,genre-005,발라드,sub,정상
+아티스트,artist-072,거미,속함,장르,genre-005,발라드,main,정상
+아티스트,artist-073,이서연 (Y: SY),속함,장르,genre-003,싱어송라이터,main,정상
+아티스트,artist-074,장기하,속함,장르,genre-003,싱어송라이터,main,정상
+아티스트,artist-074,장기하,속함,장르,genre-001,밴드,sub,정상
+아티스트,artist-075,STACY(스테이씨),속함,장르,genre-002,아이돌·팝,main,정상
+아티스트,artist-076,YENA (최예나),속함,장르,genre-002,아이돌·팝,main,정상
+아티스트,artist-077,사이먼 도미닉,속함,장르,genre-004,힙합,main,정상
+아티스트,artist-078,다영 (DAYOUNG),속함,장르,genre-002,아이돌·팝,main,정상
+아티스트,artist-079,하이라이트 (HIGHLIGHT),속함,장르,genre-002,아이돌·팝,main,정상
+아티스트,artist-079,하이라이트 (HIGHLIGHT),속함,장르,genre-001,밴드,sub,정상
+아티스트,artist-080,희규,속함,장르,genre-006,기타,미분류,정상
+아티스트,artist-081,ZIon.T,속함,장르,genre-003,싱어송라이터,main,정상
+아티스트,artist-082,비비 (BIBI),속함,장르,genre-003,싱어송라이터,main,정상
+아티스트,artist-083,체리필터 (cherryfilter),속함,장르,genre-001,밴드,main,정상
+아티스트,artist-084,로시 (Rothy),속함,장르,genre-003,싱어송라이터,main,정상
+아티스트,artist-085,스컬,속함,장르,genre-003,싱어송라이터,main,정상
+아티스트,artist-086,Crush,속함,장르,genre-004,힙합,main,정상
+아티스트,artist-086,Crush,속함,장르,genre-003,싱어송라이터,sub,정상
+아티스트,artist-087,cosmosy,속함,장르,genre-001,밴드,main,정상
+아티스트,artist-088,더윈드 (The Wind),속함,장르,genre-002,아이돌·팝,main,정상
+아티스트,artist-089,MADEIN (메이딘),속함,장르,genre-002,아이돌·팝,main,정상
+아티스트,artist-091,인디고,속함,장르,genre-006,기타,미분류,정상
+아티스트,artist-092,헤이즈 (Heize),속함,장르,genre-003,싱어송라이터,main,정상
+아티스트,artist-092,헤이즈 (Heize),속함,장르,genre-005,발라드,sub,정상
+아티스트,artist-093,죠지,속함,장르,genre-003,싱어송라이터,main,정상
+아티스트,artist-094,우디 (Woody),속함,장르,genre-003,싱어송라이터,main,정상
+아티스트,artist-095,보라,속함,장르,genre-005,발라드,main,정상
+아티스트,artist-096,e sense,속함,장르,genre-004,힙합,main,정상
+아티스트,artist-097,FTISLAND (FT아일랜드),속함,장르,genre-001,밴드,main,정상
+아티스트,artist-097,FTISLAND (FT아일랜드),속함,장르,genre-002,아이돌·팝,sub,정상
+아티스트,artist-098,LNGSHOT,속함,장르,genre-002,아이돌·팝,main,정상
+아티스트,artist-098,LNGSHOT,속함,장르,genre-004,힙합,sub,정상
+아티스트,artist-099,쿠기 (Coogie),속함,장르,genre-004,힙합,main,정상
+아티스트,artist-100,Sik-K,속함,장르,genre-004,힙합,main,정상
+아티스트,artist-101,조유리,속함,장르,genre-002,아이돌·팝,main,정상
+아티스트,artist-102,츄(CHUU),속함,장르,genre-002,아이돌·팝,main,정상
+아티스트,artist-103,"카더가든(Car, the garden)",속함,장르,genre-003,싱어송라이터,main,정상
+아티스트,artist-103,"카더가든(Car, the garden)",속함,장르,genre-005,발라드,sub,정상
+아티스트,artist-104,빌리(Billie),속함,장르,genre-002,아이돌·팝,main,정상
+아티스트,artist-105,JMIN,속함,장르,genre-004,힙합,main,정상
+아티스트,artist-106,아홉(AHOF),속함,장르,genre-002,아이돌·팝,main,정상
+아티스트,artist-107,효린(Hyolin),속함,장르,genre-002,아이돌·팝,main,정상
+아티스트,artist-108,매드클라운(Mad Clown),속함,장르,genre-004,힙합,main,정상
+아티스트,artist-109,OURBIRTHDAY (아워벌스데이),속함,장르,genre-001,밴드,main,정상
+아티스트,artist-110,ASH ISLAND (윤진영),속함,장르,genre-004,힙합,main,정상
+아티스트,artist-111,하이키(H1-KEY),속함,장르,genre-002,아이돌·팝,main,정상
+아티스트,artist-113,Ksmartboi,속함,장르,genre-004,힙합,main,확인필요
+아티스트,artist-114,NO:EL,속함,장르,genre-004,힙합,main,확인필요
+아티스트,artist-120,신인류,속함,장르,genre-001,밴드,main,확인필요
+아티스트,artist-123,아이칠린,속함,장르,genre-002,아이돌·팝,main,확인필요
+아티스트,artist-124,지코,속함,장르,genre-004,힙합,main,확인필요
+아티스트,artist-125,선미,속함,장르,genre-002,아이돌·팝,main,확인필요
+아티스트,artist-126,이영지,속함,장르,genre-004,힙합,main,확인필요
+아티스트,artist-127,양홍원,속함,장르,genre-004,힙합,main,확인필요
+아티스트,artist-128,전소연,속함,장르,genre-002,아이돌·팝,main,확인필요
+아티스트,artist-129,예빛,속함,장르,genre-003,싱어송라이터,main,확인필요
+아티스트,artist-130,이승윤,속함,장르,genre-003,싱어송라이터,main,확인필요

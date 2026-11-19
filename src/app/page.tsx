@@ -28,7 +28,7 @@ interface PositionedNode extends GraphNode {
 function getCategoryStyle(label: NodeCategory) {
   return (
     NODE_LEGEND.find((item) => item.label === label) || {
-      label: "Character" as NodeCategory,
+      label: "아티스트" as NodeCategory,
       display: label,
       upperTag: String(label).toUpperCase(),
       color: "#C83E82",
@@ -61,7 +61,7 @@ function renderHighlightedCypher(cypher: string) {
   const lines = cypher.split("\n");
   return lines.map((line, lineIdx) => {
     const tokens = line.split(
-      /(\b(?:MATCH|OPTIONAL MATCH|WHERE|RETURN|WITH|ORDER BY|DESC|ASC|DISTINCT|UNWIND|AS|AND|OR|IN|LIMIT)\b|"[^"]*"|'[^']*'|:[A-Za-z_]+(?:\|[A-Za-z_]+)*)/g
+      /(\b(?:MATCH|OPTIONAL MATCH|WHERE|RETURN|WITH|ORDER BY|DESC|ASC|DISTINCT|UNWIND|AS|AND|OR|IN|LIMIT|CONTAINS|COUNT|COLLECT)\b|"[^"]*"|'[^']*'|:[\p{L}_]+(?:\|[\p{L}_]+)*)/gu
     );
     return (
       <div key={lineIdx} className="leading-relaxed">
@@ -85,6 +85,7 @@ function renderHighlightedCypher(cypher: string) {
               "OR",
               "IN",
               "LIMIT",
+              "CONTAINS",
             ].includes(upper)
           ) {
             return (
@@ -120,18 +121,18 @@ function renderHighlightedCypher(cypher: string) {
 
 export default function HomePage() {
   // 상단 DATA SCOPE 카운트 상태
+  // (AuraDB 실측값으로 갱신되기 전 기본값: 적재 데이터 기준)
   const [scopeCounts, setScopeCounts] = useState<Record<string, number>>({
-    Character: 15,
-    Event: 13,
-    Place: 9,
-    Object: 10,
-    Ability: 4,
-    CulturalElement: 8,
+    지역: 17,
+    대학: 19,
+    축제: 25,
+    아티스트: 123,
+    장르: 6,
   });
 
   // 메인 Hero 검색 상태
   const [searchQuery, setSearchQuery] = useState(
-    "세이렌과 대립한 캐릭터들은 누구이고, 어떤 장소에서 마주쳤어?"
+    HERO_RECOMMENDED_QUESTIONS[0]
   );
   const [currentCypher, setCurrentCypher] = useState(INITIAL_CYPHER_PREVIEW);
   const [graphTitle, setGraphTitle] = useState(INITIAL_PREVIEW_GRAPH.title);
@@ -155,16 +156,17 @@ export default function HomePage() {
     {
       id: "init-user",
       role: "user",
-      content: "치이카와는 세이렌을 토벌하기 위해 무엇을 사용했어?",
+      content: "가장 많은 대학 축제에 출연한 아티스트는 누구야?",
     },
     {
       id: "init-assistant",
       role: "assistant",
       content:
-        "치이카와는 **토벌봉**을 사용해 세이렌 토벌에 나섰으며, 이 사건은 **랏코**가 납치된 사건이 원인이 되어 벌어진 **동료 구출** 사건으로 이어졌습니다.",
+        "**잔나비**가 **8개** 대학 축제에 출연해 가장 많았고, 주 장르는 **밴드**입니다. 그 다음은 **YB (윤도현 밴드)**·**프로미스나인**(각 6개)입니다.",
       evidencePaths: [
-        "치이카와 -[USES]-> 토벌봉",
-        "랏코 납치 -[CAUSES]-> 동료 구출",
+        "잔나비 -[속함]-> 밴드",
+        "잔나비 -[출연함]-> GRACIA 축제",
+        "조선대학교 -[개최함]-> GRACIA 축제",
       ],
     },
   ]);
@@ -183,32 +185,8 @@ export default function HomePage() {
       });
   }, []);
 
-  // 그래프 노드 좌표 계산 (초기 미리보기는 시안과 100% 동일한 레이아웃 적용)
+  // 그래프 노드 좌표 계산
   const positionedNodes: PositionedNode[] = useMemo(() => {
-    const presetCoords: Record<
-      string,
-      { x: number; y: number; labelPos: "top" | "bottom" }
-    > = {
-      세이렌: { x: 245, y: 115, labelPos: "top" },
-      랏코: { x: 425, y: 115, labelPos: "top" },
-      랏코납치: { x: 605, y: 115, labelPos: "top" },
-      동료구출: { x: 605, y: 245, labelPos: "top" },
-      "세이렌의 거처": { x: 780, y: 230, labelPos: "top" },
-      치이카와: { x: 245, y: 315, labelPos: "bottom" },
-      토벌봉: { x: 425, y: 315, labelPos: "bottom" },
-    };
-
-    const isDefaultPreview =
-      graphNodes.length === INITIAL_PREVIEW_GRAPH.nodes.length &&
-      graphNodes.every((n) => presetCoords[n.name]);
-
-    if (isDefaultPreview) {
-      return graphNodes.map((n) => ({
-        ...n,
-        ...presetCoords[n.name],
-      }));
-    }
-
     // 동적 서브그래프 레이아웃 (최대 12개 노드를 격자/타원형으로 깔끔하게 배치)
     const count = graphNodes.length;
     if (count === 0) return [];
@@ -246,10 +224,11 @@ export default function HomePage() {
     });
   }, [graphNodes]);
 
-  const nodeByName = useMemo(() => {
+  // 같은 이름의 캠퍼스 노드가 있으므로 id로 연결
+  const nodeById = useMemo(() => {
     const map = new Map<string, PositionedNode>();
     for (const n of positionedNodes) {
-      map.set(n.name, n);
+      map.set(n.id, n);
     }
     return map;
   }, [positionedNodes]);
@@ -407,10 +386,10 @@ export default function HomePage() {
         <div className="max-w-5xl mx-auto px-6 py-4 flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-baseline gap-3">
             <span className="text-lg font-extrabold tracking-tight text-[#E04F80]">
-              먼작귀그래프
+              페스타그래프
             </span>
             <span className="text-xs text-[#8C827A] font-medium">
-              극장판 &lt;치이카와: 인어섬의 비밀&gt; 지식그래프
+              2026 전국 주요 대학 축제 · 출연 아티스트 지식그래프
             </span>
           </div>
         </div>
@@ -425,57 +404,29 @@ export default function HomePage() {
           <span className="text-[#8C827A]">
             기준 시점{" "}
             <strong className="text-[#231B1A] font-semibold">
-              전단지 수령~귀환
+              2026.02~2026.12
             </strong>
           </span>
           <span className="text-[#E6DFD5]">|</span>
-          <span className="text-[#8C827A]">
-            캐릭터{" "}
-            <strong className="text-[#231B1A] font-semibold">
-              {scopeCounts.Character ?? 15}
-            </strong>
-          </span>
-          <span className="text-[#8C827A]">
-            사건{" "}
-            <strong className="text-[#231B1A] font-semibold">
-              {scopeCounts.Event ?? 13}
-            </strong>
-          </span>
-          <span className="text-[#8C827A]">
-            장소{" "}
-            <strong className="text-[#231B1A] font-semibold">
-              {scopeCounts.Place ?? 9}
-            </strong>
-          </span>
-          <span className="text-[#8C827A]">
-            사물{" "}
-            <strong className="text-[#231B1A] font-semibold">
-              {scopeCounts.Object ?? 10}
-            </strong>
-          </span>
-          <span className="text-[#8C827A]">
-            능력{" "}
-            <strong className="text-[#231B1A] font-semibold">
-              {scopeCounts.Ability ?? 4}
-            </strong>
-          </span>
-          <span className="text-[#8C827A]">
-            문화요소{" "}
-            <strong className="text-[#231B1A] font-semibold">
-              {scopeCounts.CulturalElement ?? 8}
-            </strong>
-          </span>
+          {NODE_LEGEND.map((item) => (
+            <span key={item.label} className="text-[#8C827A]">
+              {item.display}{" "}
+              <strong className="text-[#231B1A] font-semibold">
+                {scopeCounts[item.label] ?? "-"}
+              </strong>
+            </span>
+          ))}
         </section>
 
         {/* 2. 메인 Hero 검색창 & Text-to-Cypher 실시간 변환 영역 */}
         <section className="space-y-5 pt-2">
           <div className="space-y-2.5">
             <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-[#231B1A]">
-              인어섬 이야기를,{" "}
+              대학 축제 라인업을,{" "}
               <span className="text-[#E04F80]">관계로</span> 다시 보기
             </h1>
             <p className="text-sm text-[#7A7067] leading-relaxed max-w-xl">
-              캐릭터·사건·장소·사물·문화요소가 그물망처럼 엮인 치이카와의 세계를 자연어로 묻고 그래프로 답을 얻습니다. 질문 하나가 Cypher 쿼리로 바뀌어 인어섬의 서사를 가르쳐줍니다.
+              지역·대학·축제·아티스트·장르가 연결된 2026 대학 축제 지도를 자연어로 묻고 그래프로 답을 얻습니다. 질문 하나가 Cypher 쿼리로 바뀌어 어느 지역, 어느 대학이 어떤 음악을 섭외했는지 보여줍니다.
             </p>
           </div>
 
@@ -502,7 +453,7 @@ export default function HomePage() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="세이렌과 대립한 캐릭터들은 누구이고, 어떤 장소에서 마주쳤어?"
+                placeholder="예: 수도권과 비수도권 축제에 모두 출연한 아티스트는 누구야?"
                 className="w-full bg-transparent text-sm text-[#231B1A] placeholder-[#A69C93] focus:outline-none"
               />
             </div>
@@ -621,8 +572,8 @@ export default function HomePage() {
               >
                 {/* 엣지(관계 선 및 중앙 다크 배지) 렌더링 */}
                 {graphEdges.map((edge) => {
-                  const s = nodeByName.get(edge.source);
-                  const t = nodeByName.get(edge.target);
+                  const s = nodeById.get(edge.source);
+                  const t = nodeById.get(edge.target);
                   if (!s || !t) return null;
 
                   const mx = (s.x + t.x) / 2;
@@ -665,8 +616,11 @@ export default function HomePage() {
                 {/* 노드(원형 배지 및 상/하단 클래스 태그) 렌더링 */}
                 {positionedNodes.map((node) => {
                   const style = getCategoryStyle(node.label);
-                  const isSelected = selectedNode?.name === node.name;
-                  const displayTitle = node.displayName || node.name;
+                  const isSelected = selectedNode?.id === node.id;
+                  // 축제 이름처럼 긴 이름은 원 안에 들어가도록 줄임 (전체 이름은 하단 상세 바에 표시)
+                  const fullTitle = node.displayName || node.name;
+                  const displayTitle =
+                    fullTitle.length > 8 ? `${fullTitle.slice(0, 7)}…` : fullTitle;
 
                   return (
                     <g
@@ -674,6 +628,7 @@ export default function HomePage() {
                       onClick={() => setSelectedNode(node)}
                       className="cursor-pointer group"
                     >
+                      <title>{fullTitle}</title>
                       {/* 선택 시 포커스 링 */}
                       {isSelected && (
                         <circle
@@ -787,33 +742,14 @@ export default function HomePage() {
                 <strong className="text-sm font-extrabold text-[#231B1A]">
                   {selectedNode.displayName || selectedNode.name}
                 </strong>
-                {selectedNode.name_kor &&
-                  selectedNode.name_kor !== selectedNode.name && (
-                    <span className="text-[#7A7067]">
-                      (별칭: {selectedNode.name_kor})
-                    </span>
-                  )}
-                {selectedNode.type && (
-                  <span className="text-[#5C524A] bg-white border border-[#E6DFD5] px-2.5 py-0.5 rounded-md">
-                    특징/유형: {selectedNode.type}
+                {Object.entries(selectedNode.props ?? {}).map(([key, value]) => (
+                  <span
+                    key={key}
+                    className="text-[#5C524A] bg-white border border-[#E6DFD5] px-2.5 py-0.5 rounded-md"
+                  >
+                    {key}: {value}
                   </span>
-                )}
-                {selectedNode.personality &&
-                  selectedNode.personality !== "없음" && (
-                    <span className="text-[#5C524A] bg-white border border-[#E6DFD5] px-2.5 py-0.5 rounded-md">
-                      성격: {selectedNode.personality}
-                    </span>
-                  )}
-                {selectedNode.skills && selectedNode.skills !== "없음" && (
-                  <span className="text-[#2563EB] bg-[#EBF2FE] px-2.5 py-0.5 rounded-md font-semibold">
-                    능력(skills): {selectedNode.skills}
-                  </span>
-                )}
-                {selectedNode.immortality !== undefined && (
-                  <span className="text-[#7C2D12] bg-[#F9EBE7] px-2.5 py-0.5 rounded-md font-medium">
-                    영생 여부: {selectedNode.immortality ? "영생(true)" : "해당 없음"}
-                  </span>
-                )}
+                ))}
               </div>
               <span className="text-[11px] text-[#9A8F85]">
                 노드를 클릭하면 상세 속성을 볼 수 있습니다
@@ -911,7 +847,7 @@ export default function HomePage() {
 
         {/* 하단 푸터 안내 */}
         <footer className="pt-2 pb-8 text-[11px] text-[#9A8F85]">
-          본 화면은 교육용 예시이며, 등장인물·서사는 기획서 데이터를 바탕으로 구성한 가상의 미리보기입니다.
+          디지털인문학 응용(COLA173-19) 팀 페스타그래프 · 데이터 출처: 각 대학 총학생회 공식 인스타그램, campustival.com (2026.02~2026.12 기준, 개최 직전 라인업 변경은 반영되지 않았을 수 있음)
         </footer>
       </main>
     </div>

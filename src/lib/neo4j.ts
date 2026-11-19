@@ -26,6 +26,18 @@ export function normalizeNeo4jValue(value: unknown): unknown {
     return value.toNumber();
   }
 
+  // 날짜/시간 타입은 '2026-05-20' 같은 문자열로 변환
+  if (
+    neo4j.isDate(value) ||
+    neo4j.isDateTime(value) ||
+    neo4j.isLocalDateTime(value) ||
+    neo4j.isTime(value) ||
+    neo4j.isLocalTime(value) ||
+    neo4j.isDuration(value)
+  ) {
+    return value.toString();
+  }
+
   if (Array.isArray(value)) {
     return value.map(normalizeNeo4jValue);
   }
