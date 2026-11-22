@@ -30,11 +30,11 @@ export const NODE_LEGEND: Array<{
   color: string;
   bgLight: string;
 }> = [
-  { label: "지역", display: "지역", upperTag: "REGION", color: "#0D7A68", bgLight: "#E6F4F1" },
-  { label: "대학", display: "대학", upperTag: "UNIVERSITY", color: "#2563EB", bgLight: "#EBF2FE" },
-  { label: "축제", display: "축제", upperTag: "FESTIVAL", color: "#C83E82", bgLight: "#FCEEF5" },
-  { label: "아티스트", display: "아티스트", upperTag: "ARTIST", color: "#5E43D8", bgLight: "#F0EDFC" },
-  { label: "장르", display: "장르", upperTag: "GENRE", color: "#B86B19", bgLight: "#FDF3E7" },
+  { label: "지역", display: "지역", upperTag: "REGION", color: "#0FB394", bgLight: "#E6F4F1" },
+  { label: "대학", display: "대학", upperTag: "UNIVERSITY", color: "#3B7BF5", bgLight: "#EBF2FE" },
+  { label: "축제", display: "축제", upperTag: "FESTIVAL", color: "#E6409F", bgLight: "#FCEEF5" },
+  { label: "아티스트", display: "아티스트", upperTag: "ARTIST", color: "#7A5CF0", bgLight: "#F0EDFC" },
+  { label: "장르", display: "장르", upperTag: "GENRE", color: "#E08A1E", bgLight: "#FDF3E7" },
 ];
 
 /** 기획서 Ⅲ. 핵심 질문 3개 + 대표 탐색 질문 */

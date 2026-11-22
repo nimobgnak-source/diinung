@@ -45,7 +45,7 @@ function renderFormattedText(text: string) {
   return parts.map((part, idx) => {
     if (part.startsWith("**") && part.endsWith("**")) {
       return (
-        <strong key={idx} className="font-bold text-[#231B1A]">
+        <strong key={idx} className="font-bold text-[#F5F0FF]">
           {part.slice(2, -2)}
         </strong>
       );
@@ -109,7 +109,7 @@ function renderHighlightedCypher(cypher: string) {
             );
           }
           return (
-            <span key={tokIdx} className="text-[#F3EDE2]">
+            <span key={tokIdx} className="text-[#E9E3FF]">
               {tok}
             </span>
           );
@@ -117,6 +117,27 @@ function renderHighlightedCypher(cypher: string) {
       </div>
     );
   });
+}
+
+/**
+ * 이퀄라이저 막대 애니메이션 (음악 분위기 장식)
+ */
+function Equalizer({ small = false }: { small?: boolean }) {
+  const colors = ["#FF3FD0", "#B05CFF", "#7B5CFF", "#2AF0FF", "#FF3FD0"];
+  return (
+    <span
+      aria-hidden="true"
+      className={`inline-flex items-end gap-[3px] ${small ? "h-3.5" : "h-5"}`}
+    >
+      {colors.map((c, i) => (
+        <span
+          key={i}
+          className="eq-bar w-[3px] rounded-full"
+          style={{ backgroundColor: c, animationDelay: `${i * 0.13}s` }}
+        />
+      ))}
+    </span>
+  );
 }
 
 export default function HomePage() {
@@ -376,42 +397,52 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF7F0] text-[#231B1A] relative overflow-x-hidden">
+    <div className="min-h-screen bg-[#0B0820] text-[#F5F0FF] relative overflow-x-hidden">
       {/* 은은한 파스텔 배경 블러 장식 */}
-      <div className="pointer-events-none fixed -top-24 -right-24 w-96 h-96 rounded-full bg-[#F9DCE8]/45 blur-3xl" />
-      <div className="pointer-events-none fixed -bottom-32 -left-24 w-96 h-96 rounded-full bg-[#F5E4C8]/40 blur-3xl" />
+      <div className="pointer-events-none fixed -top-24 -right-24 w-96 h-96 rounded-full bg-[#FF3FD0]/25 blur-3xl" />
+      <div className="pointer-events-none fixed -bottom-32 -left-24 w-96 h-96 rounded-full bg-[#5A3CFF]/30 blur-3xl" />
+      {/* 무대 조명 빔 */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div className="stage-beam stage-beam-left" />
+        <div className="stage-beam stage-beam-right" />
+      </div>
 
       {/* 1. 상단 네비게이션 헤더 */}
-      <header className="border-b border-[#EDE6DA] bg-[#FAF7F0]/90 backdrop-blur-xs">
+      <header className="border-b border-[#2B2457] bg-[#0B0820]/80 backdrop-blur-xs">
         <div className="max-w-5xl mx-auto px-6 py-4 flex flex-wrap items-center justify-between gap-2">
-          <div className="flex items-baseline gap-3">
-            <span className="text-lg font-extrabold tracking-tight text-[#E04F80]">
+          <div className="flex items-center gap-3">
+            <Equalizer />
+            <span className="text-lg font-extrabold tracking-tight text-[#FF3FD0] neon-text">
               페스타그래프
             </span>
-            <span className="text-xs text-[#8C827A] font-medium">
+            <span className="text-xs text-[#A99FD6] font-medium">
               2026 전국 주요 대학 축제 · 출연 아티스트 지식그래프
             </span>
           </div>
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-[#FF3B5C]/50 bg-[#FF3B5C]/10 px-2.5 py-0.5 text-[10px] font-extrabold tracking-widest text-[#FF6B85]">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#FF3B5C] live-dot" />
+            LIVE
+          </span>
         </div>
       </header>
 
       <main className="max-w-5xl mx-auto px-6 py-7 space-y-8 relative z-10">
         {/* DATA SCOPE 배지 바 */}
-        <section className="rounded-xl border border-[#EFEAE1] bg-white px-5 py-3 shadow-2xs flex flex-wrap items-center gap-x-5 gap-y-2 text-xs">
-          <span className="font-extrabold text-[#E04F80] tracking-wider">
+        <section className="rounded-xl border border-[#2B2457] bg-white/[0.04] px-5 py-3 shadow-2xs flex flex-wrap items-center gap-x-5 gap-y-2 text-xs">
+          <span className="font-extrabold text-[#FF3FD0] tracking-wider">
             DATA SCOPE
           </span>
-          <span className="text-[#8C827A]">
+          <span className="text-[#A99FD6]">
             기준 시점{" "}
-            <strong className="text-[#231B1A] font-semibold">
+            <strong className="text-[#F5F0FF] font-semibold">
               2026.02~2026.12
             </strong>
           </span>
-          <span className="text-[#E6DFD5]">|</span>
+          <span className="text-[#3A3170]">|</span>
           {NODE_LEGEND.map((item) => (
-            <span key={item.label} className="text-[#8C827A]">
+            <span key={item.label} className="text-[#A99FD6]">
               {item.display}{" "}
-              <strong className="text-[#231B1A] font-semibold">
+              <strong className="text-[#F5F0FF] font-semibold">
                 {scopeCounts[item.label] ?? "-"}
               </strong>
             </span>
@@ -421,11 +452,11 @@ export default function HomePage() {
         {/* 2. 메인 Hero 검색창 & Text-to-Cypher 실시간 변환 영역 */}
         <section className="space-y-5 pt-2">
           <div className="space-y-2.5">
-            <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-[#231B1A]">
+            <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-[#F5F0FF]">
               대학 축제 라인업을,{" "}
-              <span className="text-[#E04F80]">관계로</span> 다시 보기
+              <span className="text-[#FF3FD0] neon-text">관계로</span> 다시 보기
             </h1>
-            <p className="text-sm text-[#7A7067] leading-relaxed max-w-xl">
+            <p className="text-sm text-[#B4A9E0] leading-relaxed max-w-xl">
               지역·대학·축제·아티스트·장르가 연결된 2026 대학 축제 지도를 자연어로 묻고 그래프로 답을 얻습니다. 질문 하나가 Cypher 쿼리로 바뀌어 어느 지역, 어느 대학이 어떤 음악을 섭외했는지 보여줍니다.
             </p>
           </div>
@@ -438,9 +469,9 @@ export default function HomePage() {
             }}
             className="flex flex-col sm:flex-row gap-2.5"
           >
-            <div className="flex-1 flex items-center gap-3 rounded-xl border border-[#E6DFD5] bg-white px-4 py-3.5 shadow-2xs focus-within:border-[#E04F80] focus-within:ring-2 focus-within:ring-[#E04F80]/15 transition">
+            <div className="flex-1 flex items-center gap-3 rounded-xl border border-[#3A3170] bg-white/[0.04] px-4 py-3.5 shadow-2xs focus-within:border-[#FF3FD0] focus-within:ring-2 focus-within:ring-[#FF3FD0]/15 transition">
               <svg
-                className="w-4 h-4 text-[#B0A69D] shrink-0"
+                className="w-4 h-4 text-[#8E84BE] shrink-0"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth={2}
@@ -454,38 +485,38 @@ export default function HomePage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="예: 수도권과 비수도권 축제에 모두 출연한 아티스트는 누구야?"
-                className="w-full bg-transparent text-sm text-[#231B1A] placeholder-[#A69C93] focus:outline-none"
+                className="w-full bg-transparent text-sm text-[#F5F0FF] placeholder-[#7D73AE] focus:outline-none"
               />
             </div>
             <button
               type="submit"
               disabled={isSearching}
-              className="rounded-xl bg-gradient-to-r from-[#E65586] to-[#DE8B3B] hover:opacity-95 px-6 py-3.5 text-sm font-bold text-white shadow-xs transition disabled:opacity-60 shrink-0 cursor-pointer"
+              className="rounded-xl bg-gradient-to-r from-[#FF3FD0] to-[#7B5CFF] hover:opacity-95 px-6 py-3.5 text-sm font-bold text-white shadow-[0_0_20px_rgba(255,63,208,0.45)] transition disabled:opacity-60 shrink-0 cursor-pointer"
             >
-              {isSearching ? "변환 및 조회 중..." : "그래프로 검색"}
+              {isSearching ? "♪ 변환 및 조회 중..." : "♪ 그래프로 검색"}
             </button>
           </form>
 
           {/* 자연어 -> CYPHER 자동 변환 코드 박스 */}
           <div className="space-y-2">
-            <div className="text-[11px] font-bold text-[#B07D2B] tracking-wide">
+            <div className="text-[11px] font-bold text-[#2AF0FF] tracking-wide">
               자연어 → CYPHER 자동 변환
             </div>
-            <div className="rounded-xl bg-[#231B1A] px-5 py-4 font-mono text-xs sm:text-[13px] overflow-x-auto shadow-xs">
+            <div className="rounded-xl bg-[#07051A] border border-[#7B5CFF]/40 shadow-[0_0_24px_rgba(123,92,255,0.25)] px-5 py-4 font-mono text-xs sm:text-[13px] overflow-x-auto shadow-xs">
               {renderHighlightedCypher(currentCypher)}
             </div>
           </div>
 
           {/* 데이터 구성 · 노드 범례 */}
           <div className="space-y-2 pt-1">
-            <div className="text-[11px] font-bold text-[#B07D2B]">
+            <div className="text-[11px] font-bold text-[#2AF0FF]">
               데이터 구성 · 노드 범례
             </div>
             <div className="flex flex-wrap gap-2">
               {NODE_LEGEND.map((item) => (
                 <span
                   key={item.label}
-                  className="inline-flex items-center gap-2 rounded-full border border-[#EAE3D5] bg-white px-3.5 py-1.5 text-xs font-medium text-[#3D332E] shadow-2xs"
+                  className="inline-flex items-center gap-2 rounded-full border border-[#3A3170] bg-white/[0.04] px-3.5 py-1.5 text-xs font-medium text-[#E4DCFF] shadow-2xs"
                 >
                   <span
                     className="w-2.5 h-2.5 rounded-full shrink-0"
@@ -499,7 +530,7 @@ export default function HomePage() {
 
           {/* 클릭 한 번으로 바로 질문해보세요 (추천 질문 칩) */}
           <div className="space-y-2 pt-1">
-            <div className="text-[11px] font-bold text-[#B07D2B]">
+            <div className="text-[11px] font-bold text-[#2AF0FF]">
               클릭 한 번으로 바로 질문해보세요
             </div>
             <div className="flex flex-wrap gap-2">
@@ -509,7 +540,7 @@ export default function HomePage() {
                   type="button"
                   disabled={isSearching}
                   onClick={() => executeGraphSearch(q)}
-                  className="rounded-full border border-[#EAE3D5] bg-white hover:border-[#E04F80] hover:bg-[#FFF9FB] px-4 py-2 text-xs text-[#4A3F39] transition shadow-2xs disabled:opacity-50 cursor-pointer text-left"
+                  className="rounded-full border border-[#3A3170] bg-white/[0.04] hover:border-[#FF3FD0] hover:bg-[#FF3FD0]/10 px-4 py-2 text-xs text-[#E4DCFF] transition shadow-2xs disabled:opacity-50 cursor-pointer text-left"
                 >
                   {q}
                 </button>
@@ -519,21 +550,21 @@ export default function HomePage() {
         </section>
 
         {/* 3. 검색 결과 그래프 & 조회 데이터 뷰어 */}
-        <section className="rounded-2xl border border-[#EFEAE1] bg-white p-6 shadow-2xs space-y-4">
+        <section className="rounded-2xl border border-[#2B2457] bg-white/[0.04] p-6 shadow-2xs space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <h2 className="text-base font-extrabold text-[#231B1A]">
+            <h2 className="text-base font-extrabold text-[#F5F0FF]">
               검색 결과 그래프
             </h2>
             <div className="flex flex-wrap items-center gap-3">
-              <span className="text-xs text-[#9A8F85]">{graphTitle}</span>
-              <div className="inline-flex rounded-lg border border-[#EAE3D5] bg-[#FAF7F0] p-0.5 text-[11px]">
+              <span className="text-xs text-[#8E84BE]">{graphTitle}</span>
+              <div className="inline-flex rounded-lg border border-[#3A3170] bg-[#0B0820] p-0.5 text-[11px]">
                 <button
                   type="button"
                   onClick={() => setViewMode("graph")}
                   className={`px-2.5 py-1 rounded-md font-medium transition cursor-pointer ${
                     viewMode === "graph"
-                      ? "bg-white text-[#E04F80] shadow-2xs"
-                      : "text-[#7A7067]"
+                      ? "bg-[#FF3FD0]/20 text-[#FF7BE3] shadow-2xs"
+                      : "text-[#B4A9E0]"
                   }`}
                 >
                   그래프 뷰
@@ -543,8 +574,8 @@ export default function HomePage() {
                   onClick={() => setViewMode("table")}
                   className={`px-2.5 py-1 rounded-md font-medium transition cursor-pointer ${
                     viewMode === "table"
-                      ? "bg-white text-[#E04F80] shadow-2xs"
-                      : "text-[#7A7067]"
+                      ? "bg-[#FF3FD0]/20 text-[#FF7BE3] shadow-2xs"
+                      : "text-[#B4A9E0]"
                   }`}
                 >
                   결과 표 ({records.length})
@@ -554,8 +585,8 @@ export default function HomePage() {
                   onClick={() => setViewMode("json")}
                   className={`px-2.5 py-1 rounded-md font-medium transition cursor-pointer ${
                     viewMode === "json"
-                      ? "bg-white text-[#E04F80] shadow-2xs"
-                      : "text-[#7A7067]"
+                      ? "bg-[#FF3FD0]/20 text-[#FF7BE3] shadow-2xs"
+                      : "text-[#B4A9E0]"
                   }`}
                 >
                   JSON
@@ -570,6 +601,15 @@ export default function HomePage() {
                 viewBox="0 0 1000 410"
                 className="w-full h-auto min-w-[680px] select-none"
               >
+                <defs>
+                  <filter id="node-glow" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur stdDeviation="7" result="blur" />
+                    <feMerge>
+                      <feMergeNode in="blur" />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
+                </defs>
                 {/* 엣지(관계 선 및 중앙 다크 배지) 렌더링 */}
                 {graphEdges.map((edge) => {
                   const s = nodeById.get(edge.source);
@@ -587,7 +627,7 @@ export default function HomePage() {
                         y1={s.y}
                         x2={t.x}
                         y2={t.y}
-                        stroke="#BEB5AC"
+                        stroke="#6A5CC2" strokeOpacity={0.7}
                         strokeWidth={1.6}
                       />
                       <rect
@@ -596,7 +636,7 @@ export default function HomePage() {
                         width={badgeWidth}
                         height={22}
                         rx={5}
-                        fill="#231B1A"
+                        fill="#120D2E" stroke="#7B5CFF" strokeOpacity={0.6}
                       />
                       <text
                         x={mx}
@@ -648,7 +688,7 @@ export default function HomePage() {
                         x={node.x}
                         y={node.labelPos === "top" ? node.y - 44 : node.y + 52}
                         textAnchor="middle"
-                        fill="#9A8F85"
+                        fill="#8E84BE"
                         fontSize="9"
                         fontWeight="600"
                         letterSpacing="0.04em"
@@ -662,6 +702,10 @@ export default function HomePage() {
                         cy={node.y}
                         r={35}
                         fill={style.color}
+                        filter="url(#node-glow)"
+                        stroke="#FFFFFF"
+                        strokeOpacity={isSelected ? 0.9 : 0.25}
+                        strokeWidth={1.5}
                       />
 
                       {/* 노드 내부 한글 이름 */}
@@ -683,14 +727,14 @@ export default function HomePage() {
           )}
 
           {viewMode === "table" && (
-            <div className="overflow-x-auto border border-[#EFEAE1] rounded-xl">
+            <div className="overflow-x-auto border border-[#2B2457] rounded-xl">
               {records.length === 0 ? (
-                <div className="p-6 text-center text-xs text-[#8C827A]">
+                <div className="p-6 text-center text-xs text-[#A99FD6]">
                   상단 검색창이나 추천 질문 칩을 클릭하면 AuraDB 조회 결과 표가 표시됩니다.
                 </div>
               ) : (
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-[#FAF7F0] border-b border-[#EFEAE1] text-[#6E6359]">
+                  <thead className="bg-[#0B0820] border-b border-[#2B2457] text-[#C3B8EE]">
                     <tr>
                       {Object.keys(records[0]).map((key) => (
                         <th key={key} className="px-4 py-2.5 font-bold">
@@ -699,11 +743,11 @@ export default function HomePage() {
                       ))}
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[#F3EFE6]">
+                  <tbody className="divide-y divide-[#221C47]">
                     {records.map((row, rIdx) => (
-                      <tr key={rIdx} className="hover:bg-[#FDFBF7]">
+                      <tr key={rIdx} className="hover:bg-white/5">
                         {Object.values(row).map((val, cIdx) => (
-                          <td key={cIdx} className="px-4 py-2.5 text-[#231B1A]">
+                          <td key={cIdx} className="px-4 py-2.5 text-[#F5F0FF]">
                             {typeof val === "object"
                               ? JSON.stringify(val)
                               : String(val ?? "-")}
@@ -718,7 +762,7 @@ export default function HomePage() {
           )}
 
           {viewMode === "json" && (
-            <pre className="max-h-72 overflow-auto rounded-xl bg-[#231B1A] p-4 text-[11px] text-[#F3EDE2] font-mono">
+            <pre className="max-h-72 overflow-auto rounded-xl bg-[#07051A] border border-[#7B5CFF]/40 shadow-[0_0_24px_rgba(123,92,255,0.25)] p-4 text-[11px] text-[#E9E3FF] font-mono">
               {JSON.stringify(
                 records.length > 0 ? records : { nodes: graphNodes, edges: graphEdges },
                 null,
@@ -729,7 +773,7 @@ export default function HomePage() {
 
           {/* 클릭된 노드 상세 속성 표시 바 */}
           {selectedNode && (
-            <div className="rounded-xl bg-[#FAF7F0] border border-[#EAE3D5] px-4 py-3 flex flex-wrap items-center justify-between gap-3 text-xs">
+            <div className="rounded-xl bg-[#0B0820] border border-[#3A3170] px-4 py-3 flex flex-wrap items-center justify-between gap-3 text-xs">
               <div className="flex flex-wrap items-center gap-2.5">
                 <span
                   className="px-2.5 py-0.5 rounded-full text-white font-bold text-[11px]"
@@ -739,36 +783,36 @@ export default function HomePage() {
                 >
                   {selectedNode.label} · {selectedNode.id}
                 </span>
-                <strong className="text-sm font-extrabold text-[#231B1A]">
+                <strong className="text-sm font-extrabold text-[#F5F0FF]">
                   {selectedNode.displayName || selectedNode.name}
                 </strong>
                 {Object.entries(selectedNode.props ?? {}).map(([key, value]) => (
                   <span
                     key={key}
-                    className="text-[#5C524A] bg-white border border-[#E6DFD5] px-2.5 py-0.5 rounded-md"
+                    className="text-[#D2C8F5] bg-white/[0.04] border border-[#3A3170] px-2.5 py-0.5 rounded-md"
                   >
                     {key}: {value}
                   </span>
                 ))}
               </div>
-              <span className="text-[11px] text-[#9A8F85]">
+              <span className="text-[11px] text-[#8E84BE]">
                 노드를 클릭하면 상세 속성을 볼 수 있습니다
               </span>
             </div>
           )}
 
-          <p className="text-[11px] text-[#9A8F85]">
+          <p className="text-[11px] text-[#8E84BE]">
             * 실제 서비스에서는 Neo4j 기반 인터랙티브 그래프로 렌더링되며, 노드를 클릭하면 상세 속성과 연결 경로를 확인할 수 있습니다.
           </p>
         </section>
 
         {/* 4. 하단 그래프 기반 AI 챗봇 */}
-        <section className="max-w-lg rounded-2xl border border-[#EFEAE1] bg-white p-5 shadow-2xs space-y-4">
+        <section className="max-w-lg rounded-2xl border border-[#2B2457] bg-white/[0.04] p-5 shadow-2xs space-y-4">
           <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-full bg-gradient-to-br from-[#E65586] to-[#DE8B3B] flex items-center justify-center text-white text-xs font-extrabold shadow-2xs">
-              G
+            <div className="w-7 h-7 rounded-full bg-gradient-to-br from-[#FF3FD0] to-[#7B5CFF] flex items-center justify-center text-white text-xs font-extrabold shadow-2xs">
+              ♪
             </div>
-            <h3 className="text-sm font-extrabold text-[#231B1A]">
+            <h3 className="text-sm font-extrabold text-[#F5F0FF]">
               그래프 기반 AI 챗봇
             </h3>
           </div>
@@ -778,13 +822,13 @@ export default function HomePage() {
             {chatMessages.map((msg) =>
               msg.role === "user" ? (
                 <div key={msg.id} className="flex justify-end">
-                  <div className="rounded-2xl rounded-tr-xs bg-[#F6D5E1] text-[#6E223F] px-4 py-2.5 text-xs font-medium max-w-xs leading-relaxed">
+                  <div className="rounded-2xl rounded-tr-xs bg-[#FF3FD0]/15 border border-[#FF3FD0]/40 text-[#FFD9F6] px-4 py-2.5 text-xs font-medium max-w-xs leading-relaxed">
                     {msg.content}
                   </div>
                 </div>
               ) : (
                 <div key={msg.id} className="space-y-2">
-                  <div className="rounded-xl border border-[#EFEAE1] bg-[#FDFCFB] p-3.5 text-xs text-[#3D332E] leading-relaxed whitespace-pre-wrap">
+                  <div className="rounded-xl border border-[#2B2457] bg-white/[0.04] p-3.5 text-xs text-[#E4DCFF] leading-relaxed whitespace-pre-wrap">
                     {renderFormattedText(msg.content)}
                   </div>
                   {msg.evidencePaths && msg.evidencePaths.length > 0 && (
@@ -792,7 +836,7 @@ export default function HomePage() {
                       {msg.evidencePaths.map((pathStr, pIdx) => (
                         <span
                           key={pIdx}
-                          className="inline-block rounded-md bg-[#E6F4F1] border border-[#B8E2D8] px-2.5 py-1 text-[10.5px] font-mono font-semibold text-[#0D7A68]"
+                          className="inline-block rounded-md bg-[#2AF0FF]/10 border border-[#2AF0FF]/35 px-2.5 py-1 text-[10.5px] font-mono font-semibold text-[#8FF7FF]"
                         >
                           {pathStr}
                         </span>
@@ -803,8 +847,9 @@ export default function HomePage() {
               )
             )}
             {isChatLoading && (
-              <div className="rounded-xl border border-[#EFEAE1] bg-[#FDFCFB] p-3 text-xs text-[#8C827A]">
-                AuraDB 경로를 조회하여 답변을 생성하고 있습니다...
+              <div className="rounded-xl border border-[#2B2457] bg-white/[0.04] p-3 text-xs text-[#A99FD6] flex items-center gap-2.5">
+                <Equalizer small />
+                AuraDB 경로를 조회하여 답변을 생성하고 있습니다... (30초~1분)
               </div>
             )}
           </div>
@@ -816,13 +861,13 @@ export default function HomePage() {
               value={chatInput}
               onChange={(e) => setChatInput(e.target.value)}
               placeholder="그래프에게 물어보기..."
-              className="flex-1 rounded-xl border border-[#E6DFD5] bg-[#FAF7F0]/60 px-3.5 py-2.5 text-xs text-[#231B1A] placeholder-[#A69C93] focus:outline-none focus:border-[#E04F80]"
+              className="flex-1 rounded-xl border border-[#3A3170] bg-white/5 px-3.5 py-2.5 text-xs text-[#F5F0FF] placeholder-[#7D73AE] focus:outline-none focus:border-[#FF3FD0]"
             />
             <button
               type="submit"
               disabled={isChatLoading}
               aria-label="질문 전송"
-              className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#E65586] to-[#DE8B3B] flex items-center justify-center text-white shadow-2xs hover:opacity-95 disabled:opacity-50 cursor-pointer shrink-0"
+              className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#FF3FD0] to-[#7B5CFF] flex items-center justify-center text-white shadow-2xs hover:opacity-95 disabled:opacity-50 cursor-pointer shrink-0"
             >
               <svg
                 className="w-4 h-4"
@@ -840,13 +885,13 @@ export default function HomePage() {
             </button>
           </form>
 
-          <p className="text-[10.5px] text-[#9A8F85]">
+          <p className="text-[10.5px] text-[#8E84BE]">
             * GraphRAG 방식 — 답변은 Cypher로 조회된 실제 경로에 기반합니다.
           </p>
         </section>
 
         {/* 하단 푸터 안내 */}
-        <footer className="pt-2 pb-8 text-[11px] text-[#9A8F85]">
+        <footer className="pt-2 pb-8 text-[11px] text-[#8E84BE]">
           디지털인문학 응용(COLA173-19) 팀 페스타그래프 · 데이터 출처: 각 대학 총학생회 공식 인스타그램, campustival.com (2026.02~2026.12 기준, 개최 직전 라인업 변경은 반영되지 않았을 수 있음)
         </footer>
       </main>

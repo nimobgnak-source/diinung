@@ -1,8 +1,9 @@
 @import "tailwindcss";
 
 :root {
-  --background: #faf7f0;
-  --foreground: #231b1a;
+  --background: #0b0820;
+  --foreground: #f5f0ff;
+  color-scheme: dark;
 }
 
 body {
@@ -10,4 +11,69 @@ body {
   color: var(--foreground);
   font-family: "Pretendard Variable", Pretendard, -apple-system,
     BlinkMacSystemFont, system-ui, Roboto, "Noto Sans KR", sans-serif;
+}
+
+/* 네온 글자 발광 */
+.neon-text {
+  text-shadow: 0 0 8px rgba(255, 63, 208, 0.65),
+    0 0 22px rgba(255, 63, 208, 0.35);
+}
+
+/* 이퀄라이저 막대 */
+.eq-bar {
+  height: 100%;
+  transform-origin: bottom;
+  animation: eq-bounce 0.9s ease-in-out infinite alternate;
+}
+@keyframes eq-bounce {
+  0% { transform: scaleY(0.25); }
+  50% { transform: scaleY(1); }
+  100% { transform: scaleY(0.45); }
+}
+
+/* LIVE 점 깜빡임 */
+.live-dot {
+  box-shadow: 0 0 8px #ff3b5c;
+  animation: live-pulse 1.4s ease-in-out infinite;
+}
+@keyframes live-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* 무대 조명 빔 */
+.stage-beam {
+  position: absolute;
+  top: -20vh;
+  width: 38vw;
+  height: 140vh;
+  opacity: 0.16;
+  filter: blur(18px);
+  transform-origin: top center;
+}
+.stage-beam-left {
+  left: 4vw;
+  background: linear-gradient(to bottom, #ff3fd0, transparent 75%);
+  clip-path: polygon(45% 0, 55% 0, 100% 100%, 0 100%);
+  animation: beam-sway-left 9s ease-in-out infinite alternate;
+}
+.stage-beam-right {
+  right: 4vw;
+  background: linear-gradient(to bottom, #2af0ff, transparent 75%);
+  clip-path: polygon(45% 0, 55% 0, 100% 100%, 0 100%);
+  animation: beam-sway-right 11s ease-in-out infinite alternate;
+}
+@keyframes beam-sway-left {
+  from { transform: rotate(-18deg); }
+  to { transform: rotate(8deg); }
+}
+@keyframes beam-sway-right {
+  from { transform: rotate(18deg); }
+  to { transform: rotate(-8deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eq-bar, .live-dot, .stage-beam-left, .stage-beam-right {
+    animation: none;
+  }
 }
